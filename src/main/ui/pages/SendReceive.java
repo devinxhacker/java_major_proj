@@ -189,19 +189,17 @@ public class SendReceive implements ActionListener {
 				return;
 			}
 
-			SendReceivePayload payload = new SendReceivePayload();
+			String transactionType = type;
+			
+			CreateRequestPayload payload = new CreateRequestPayload();
 			payload.itemId = selectedItem.id;
 			payload.quantity = quantity;
-			String transactionType = type;
+			payload.type = transactionType;
 
 			SwingWorker<BasicResponse, Void> worker = new SwingWorker<BasicResponse, Void>() {
 				@Override
 				protected BasicResponse doInBackground() throws Exception {
-					if (transactionType.equals("send")) {
-						return jdbcService.sendTransaction(payload);
-					} else {
-						return jdbcService.receiveTransaction(payload);
-					}
+					return jdbcService.createRequest(payload);
 				}
 				
 				@Override
