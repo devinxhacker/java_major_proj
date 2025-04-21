@@ -2,12 +2,15 @@ package main.ui.pages;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.List;
 import javax.swing.*;
 import javax.swing.border.*;
 
 import main.ui.components.Header;
-import main.api.ApiService;
-import main.api.ApiSchema.*;
+
+import main.jdbc.JDBCService;
+import main.jdbc.JDBCService.*;
+import main.jdbc.TransactionDAO.Transaction;
 
 public class Transactions implements ActionListener {
 
@@ -16,17 +19,18 @@ public class Transactions implements ActionListener {
 	JButton refreshButton;
 	JPanel transactionList;
 	JScrollPane scrollPane;
+	private JDBCService jdbcService;
 
 	public Transactions() {
+		jdbcService = new JDBCService();
+		
 		frame.setTitle("Transactions ");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(1280, 720);
 		frame.getContentPane().setBackground(new Color(245, 247, 250));
 
-		// header starts here
 		Header header = new Header(frame);
 		frame.add(header, BorderLayout.NORTH);
-		// header ends here
 
 		contentPanel = new JPanel(new BorderLayout());
 		contentPanel.setBackground(new Color(245, 247, 250));
@@ -101,18 +105,16 @@ public class Transactions implements ActionListener {
 		transactionList.revalidate();
 		transactionList.repaint();
 		
-		SwingWorker<TransactionApiResponse, Void> worker = new SwingWorker<TransactionApiResponse, Void>() {
+		SwingWorker<TransactionResponse, Void> worker = new SwingWorker<TransactionResponse, Void>() {
 			@Override
-			protected TransactionApiResponse doInBackground() throws Exception {
-				ApiService service = new ApiService();
-				TransactionApiResponse response = service.fetchAllTransactions();
-				return response;
+			protected TransactionResponse doInBackground() throws Exception {
+				return jdbcService.fetchAllTransactions();
 			}
 			
 			@Override
 			protected void done() {
 				try {
-					TransactionApiResponse response = get();
+					TransactionResponse response = get();
 					if (response != null && response.success) {
 						displayTransactions(response.data);
 					} else {
@@ -142,17 +144,17 @@ public class Transactions implements ActionListener {
 		worker.execute();
 	}
 	
-	private void displayTransactions(TransactionData[] transactions) {
+	private void displayTransactions(List<Transaction> transactions) {
 		transactionList.removeAll();
 		
-		if (transactions == null || transactions.length == 0) {
+		if (transactions == null || transactions.isEmpty()) {
 			JLabel noDataLabel = new JLabel("No transactions found.");
 			noDataLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
 			noDataLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 			transactionList.add(noDataLabel);
 		} else {
 			
-			for (TransactionData t : transactions) {
+			for (Transaction t : transactions) {
 				JPanel card = new JPanel();
 				card.setLayout(new BorderLayout());
 				card.setMaximumSize(new Dimension(1000, 120));

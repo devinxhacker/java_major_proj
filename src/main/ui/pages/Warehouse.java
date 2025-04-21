@@ -2,37 +2,37 @@ package main.ui.pages;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.List;
 
 import javax.swing.*;
 import javax.swing.border.*;
 
-import main.api.*;
-import main.api.ApiSchema.*;
 import main.ui.components.Header;
+
+import main.jdbc.JDBCService;
+import main.jdbc.JDBCService.*;
+import main.jdbc.CategoryDAO.Category;
+
 
 public class Warehouse implements ActionListener, ComponentListener {
 	
 	private JFrame frame = new JFrame();
 	private static JPanel compartments = new JPanel();
-	
+	private JDBCService jdbcService;
+
 	public Warehouse() {
+		jdbcService = new JDBCService();
 		
 		frame.setTitle("Warehouse");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(1280, 720);
 		
-		// header starts here
 		Header header = new Header(frame);
 		frame.add(header, BorderLayout.NORTH);
-		// header ends here
 		
-		
-		// main panel starts here
 		JPanel content = new JPanel();
 		content.setLayout(new BorderLayout());
 		
-		
-		// title + refresh button starts here
 		JPanel wrapperPanel = new JPanel();
 		
 		JPanel topPanel = new JPanel();
@@ -65,10 +65,7 @@ public class Warehouse implements ActionListener, ComponentListener {
 		
 		wrapperPanel.add(topPanel);
 		content.add(wrapperPanel, BorderLayout.NORTH);
-		// title + refresh button ends here
 		
-		
-		// compartments start here
         JPanel wrapperCompartment = new JPanel();
         
 		compartments.setLayout(new GridLayout(0, 3, 20, 20));
@@ -77,14 +74,13 @@ public class Warehouse implements ActionListener, ComponentListener {
 	
 		wrapperCompartment.add(compartments);
 		content.add(wrapperCompartment, BorderLayout.SOUTH);
-		// compartments end here
 		
 		frame.add(content, BorderLayout.CENTER);
 		
 		frame.addComponentListener(this);
 	}
 	
-	private JPanel createCompartment(String compartmentName, int totalCapacity, int spaceUsed, CategoryData data) {
+	private JPanel createCompartment(String compartmentName, int totalCapacity, int spaceUsed, Category data) {
 		
 		JPanel card = new JPanel();
 		card.setBackground(Color.pink);
@@ -129,9 +125,14 @@ public class Warehouse implements ActionListener, ComponentListener {
 		JButton detailsButton = new JButton("View details");
 		detailsButton.setAlignmentX(Container.CENTER_ALIGNMENT);
 		detailsButton.addActionListener(e -> {
-		    this.frame.dispose();
-		    CompartmentDetail detailPage = new CompartmentDetail(data);
-		    detailPage.show();
+		    frame.dispose();
+		    if (data != null) {
+		        CompartmentDetail detailPage = new CompartmentDetail(data);
+		        detailPage.show();
+		    } else {
+		        Warehouse newFrame = new Warehouse();
+		        newFrame.show();
+		    }
 		});
 		card.add(detailsButton);
 		
@@ -140,31 +141,28 @@ public class Warehouse implements ActionListener, ComponentListener {
 	
 	private void fetchData() {
 		
-		SwingWorker<WarehouseApiResponse, Void> worker = new SwingWorker<WarehouseApiResponse, Void>() {
+		SwingWorker<WarehouseResponse, Void> worker = new SwingWorker<WarehouseResponse, Void>() {
 			
 			@Override
-			protected WarehouseApiResponse doInBackground() throws Exception {
-				
-				ApiService service = new ApiService();
-				WarehouseApiResponse response = service.fetchAllCompartments();
-				return response;
+			protected WarehouseResponse doInBackground() throws Exception {
+				return jdbcService.fetchAllCompartments();
 			}
 			
 			@Override
 			protected void done() {
 				
 				try {
-					WarehouseApiResponse obj = (WarehouseApiResponse) get();
+					WarehouseResponse obj = get();
 					if (obj.success) {
 						compartments.removeAll();
 
-						ApiSchema.CategoryData[] compartmentsArray = obj.data;
-						for (int i = 0; i < compartmentsArray.length; i++) {
+						List<Category> categoriesList = obj.data;
+						for (Category category : categoriesList) {
 							compartments.add(createCompartment(
-							    compartmentsArray[i].name, 
-							    compartmentsArray[i].maxCapacity, 
-							    compartmentsArray[i].currentCapacity,
-							    compartmentsArray[i]
+							    category.name, 
+							    category.maxCapacity, 
+							    category.currentCapacity,
+							    category
 							));
 						}
 
@@ -172,7 +170,8 @@ public class Warehouse implements ActionListener, ComponentListener {
 						compartments.repaint();
 					}
 				} catch (Exception e) {
-					System.err.println("lets cry about this");
+					System.err.println("Error loading compartments: " + e.getMessage());
+					e.printStackTrace();
 				}
 			}
 		};

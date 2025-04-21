@@ -2,26 +2,28 @@ package main.ui.pages;
 
 import java.awt.*;
 import java.awt.event.*;
+import javax.swing.*;
 import java.util.List;
 import java.util.ArrayList;
 
-import javax.swing.*;
 
-import main.api.ApiService;
 import main.ui.components.Header;
-import main.api.ApiSchema.*;
+
+import main.jdbc.JDBCService;
+import main.jdbc.JDBCService.*;
+import main.jdbc.ItemDAO.Item;
 
 public class SendReceive implements ActionListener {
 
 	JFrame frame = new JFrame();
 	private JTextField textField;
 	private JComboBox<String> comboBox;
-	private ApiService apiService;
-	private List<ItemsData> itemsDataList;
+	private JDBCService jdbcService;
+	private List<Item> itemsList;
 
 	public SendReceive() {
-		apiService = new ApiService();
-		itemsDataList = new ArrayList<>();
+		jdbcService = new JDBCService();
+		itemsList = new ArrayList<>();
 
 		frame.setTitle("Send/Receive");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -105,27 +107,26 @@ public class SendReceive implements ActionListener {
 	}
 
 	private void loadItems() {
-
         comboBox.removeAllItems();
         comboBox.addItem("Loading items...");
         comboBox.setEnabled(false);
 		
-		SwingWorker<ItemsApiResponse, Void> worker = new SwingWorker<ItemsApiResponse, Void>() {
+		SwingWorker<ItemsResponse, Void> worker = new SwingWorker<ItemsResponse, Void>() {
 			@Override
-			protected ItemsApiResponse doInBackground() throws Exception {
-				return apiService.fetchAllItems();
+			protected ItemsResponse doInBackground() throws Exception {
+				return jdbcService.fetchAllItems();
 			}
 			
 			@Override
 			protected void done() {
 				try {
-					ItemsApiResponse response = get();
+					ItemsResponse response = get();
 					if (response != null && response.success && response.data != null) {
-						itemsDataList.clear();
+						itemsList.clear();
 						comboBox.removeAllItems();
 						comboBox.addItem("Select an item...");
-						for (ItemsData item : response.data) {
-							itemsDataList.add(item);
+						for (Item item : response.data) {
+							itemsList.add(item);
 							comboBox.addItem(item.name);
 						}
 						comboBox.setEnabled(true);
@@ -175,8 +176,8 @@ public class SendReceive implements ActionListener {
 				return;
 			}
 
-			ItemsData selectedItem = null;
-			for (ItemsData item : itemsDataList) {
+			Item selectedItem = null;
+			for (Item item : itemsList) {
 				if (item.name.equals(selectedItemName)) {
 					selectedItem = item;
 					break;
@@ -193,20 +194,20 @@ public class SendReceive implements ActionListener {
 			payload.quantity = quantity;
 			String transactionType = type;
 
-			SwingWorker<PostResponse, Void> worker = new SwingWorker<PostResponse, Void>() {
+			SwingWorker<BasicResponse, Void> worker = new SwingWorker<BasicResponse, Void>() {
 				@Override
-				protected PostResponse doInBackground() throws Exception {
+				protected BasicResponse doInBackground() throws Exception {
 					if (transactionType.equals("send")) {
-						return apiService.sendTransaction(payload);
+						return jdbcService.sendTransaction(payload);
 					} else {
-						return apiService.receiveTransaction(payload);
+						return jdbcService.receiveTransaction(payload);
 					}
 				}
 				
 				@Override
 				protected void done() {
 					try {
-						PostResponse response = get();
+						BasicResponse response = get();
 						if (response != null && response.success) {
 							JOptionPane.showMessageDialog(frame, "Item " + transactionType + " successful.", "Success",
 									JOptionPane.INFORMATION_MESSAGE);
@@ -244,6 +245,8 @@ public class SendReceive implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
+		// TODO Auto-generated method stub
+		
 	}
+
 }
