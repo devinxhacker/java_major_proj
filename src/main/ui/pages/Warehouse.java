@@ -30,17 +30,14 @@ public class Warehouse implements ActionListener, ComponentListener {
 		// main panel starts here
 		JPanel content = new JPanel();
 		content.setLayout(new BorderLayout());
-		content.setBackground(Color.yellow);
 		
 		
 		// title + refresh button starts here
 		JPanel wrapperPanel = new JPanel();
-		wrapperPanel.setBackground(Color.yellow);
 		
 		JPanel topPanel = new JPanel();
 		topPanel.setLayout(new BorderLayout());
 		topPanel.setPreferredSize(new Dimension(1080, 60));
-		topPanel.setBackground(Color.yellow);
 		topPanel.setBorder(BorderFactory.createLineBorder(Color.black, 1, true));
 		
 		
@@ -52,7 +49,6 @@ public class Warehouse implements ActionListener, ComponentListener {
 		
 		
 		JPanel buttonWrapper = new JPanel();
-		buttonWrapper.setBackground(Color.yellow);
 		buttonWrapper.setBorder(new EmptyBorder(10, 0, 0, 40));
 		
 		JButton refreshButton = new JButton("Refresh");
@@ -74,11 +70,9 @@ public class Warehouse implements ActionListener, ComponentListener {
 		
 		// compartments start here
         JPanel wrapperCompartment = new JPanel();
-        wrapperCompartment.setBackground(Color.yellow);
         
 		compartments.setLayout(new GridLayout(0, 3, 20, 20));
 		compartments.setPreferredSize(new Dimension(1080, 550));
-		compartments.setBackground(Color.yellow);
 		compartments.setBorder(BorderFactory.createLineBorder(Color.black, 1, true));
 	
 		wrapperCompartment.add(compartments);

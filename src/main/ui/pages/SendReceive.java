@@ -2,13 +2,11 @@ package main.ui.pages;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.io.IOException;
 import java.util.List;
 import java.util.ArrayList;
 
 import javax.swing.*;
 
-import main.api.ApiSchema;
 import main.api.ApiService;
 import main.ui.components.Header;
 import main.api.ApiSchema.*;
@@ -31,7 +29,6 @@ public class SendReceive implements ActionListener {
 		frame.getContentPane().setBackground(new Color(255, 255, 255));
 		frame.getContentPane().setLayout(new BorderLayout(0, 0));
 
-		// header starts here
 		Header header = new Header(frame);
 		frame.getContentPane().add(header, BorderLayout.NORTH);
 
@@ -103,28 +100,50 @@ public class SendReceive implements ActionListener {
 		btnSendItems.setBackground(new Color(255, 0, 0));
 		btnSendItems.setBounds(111, 358, 169, 31);
 		panel_1.add(btnSendItems);
-		// header ends here
 
 		loadItems();
 	}
 
 	private void loadItems() {
-		try {
-			ItemsApiResponse response = apiService.fetchAllItems();
-			if (response != null && response.success && response.data != null) {
-				itemsDataList.clear();
-				comboBox.removeAllItems();
-				comboBox.addItem("Select an item...");
-				for (ItemsData item : response.data) {
-					itemsDataList.add(item);
-					comboBox.addItem(item.name);
-				}
-			} else {
-				JOptionPane.showMessageDialog(frame, "Failed to load items.", "Error", JOptionPane.ERROR_MESSAGE);
+
+        comboBox.removeAllItems();
+        comboBox.addItem("Loading items...");
+        comboBox.setEnabled(false);
+		
+		SwingWorker<ItemsApiResponse, Void> worker = new SwingWorker<ItemsApiResponse, Void>() {
+			@Override
+			protected ItemsApiResponse doInBackground() throws Exception {
+				return apiService.fetchAllItems();
 			}
-		} catch (Exception e) {
-			JOptionPane.showMessageDialog(frame, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-		}
+			
+			@Override
+			protected void done() {
+				try {
+					ItemsApiResponse response = get();
+					if (response != null && response.success && response.data != null) {
+						itemsDataList.clear();
+						comboBox.removeAllItems();
+						comboBox.addItem("Select an item...");
+						for (ItemsData item : response.data) {
+							itemsDataList.add(item);
+							comboBox.addItem(item.name);
+						}
+						comboBox.setEnabled(true);
+					} else {
+						comboBox.removeAllItems();
+						comboBox.addItem("Failed to load items");
+						JOptionPane.showMessageDialog(frame, "Failed to load items.", "Error", JOptionPane.ERROR_MESSAGE);
+					}
+				} catch (Exception e) {
+					comboBox.removeAllItems();
+					comboBox.addItem("Error loading items");
+					comboBox.setEnabled(true);
+					JOptionPane.showMessageDialog(frame, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		};
+		
+		worker.execute();
 	}
 
 	private void sendItem() {
@@ -172,24 +191,40 @@ public class SendReceive implements ActionListener {
 			SendReceivePayload payload = new SendReceivePayload();
 			payload.itemId = selectedItem.id;
 			payload.quantity = quantity;
+			String transactionType = type;
 
-			PostResponse response;
-			if (type.equals("send")) {
-				response = apiService.sendTransaction(payload);
-			} else {
-				response = apiService.receiveTransaction(payload);
-			}
-
-			if (response != null && response.success) {
-				JOptionPane.showMessageDialog(frame, "Item " + type + " successful.", "Success",
-						JOptionPane.INFORMATION_MESSAGE);
-				textField.setText("");
-				loadItems();
-			} else {
-				JOptionPane.showMessageDialog(frame,
-						"Item " + type + " failed: " + (response != null ? response.message : "Unknown error"), "Error",
-						JOptionPane.ERROR_MESSAGE);
-			}
+			SwingWorker<PostResponse, Void> worker = new SwingWorker<PostResponse, Void>() {
+				@Override
+				protected PostResponse doInBackground() throws Exception {
+					if (transactionType.equals("send")) {
+						return apiService.sendTransaction(payload);
+					} else {
+						return apiService.receiveTransaction(payload);
+					}
+				}
+				
+				@Override
+				protected void done() {
+					try {
+						PostResponse response = get();
+						if (response != null && response.success) {
+							JOptionPane.showMessageDialog(frame, "Item " + transactionType + " successful.", "Success",
+									JOptionPane.INFORMATION_MESSAGE);
+							textField.setText("");
+							loadItems();
+						} else {
+							JOptionPane.showMessageDialog(frame,
+									"Item " + transactionType + " failed: " + (response != null ? response.message : "Unknown error"), "Error",
+									JOptionPane.ERROR_MESSAGE);
+						}
+					} catch (Exception e) {
+						JOptionPane.showMessageDialog(frame, "An unexpected error occurred: " + e.getMessage(), "Error",
+								JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			};
+			
+			worker.execute();
 		} catch (NumberFormatException e) {
 			JOptionPane.showMessageDialog(frame, "Invalid quantity format.", "Error", JOptionPane.ERROR_MESSAGE);
 		} catch (Exception e) {

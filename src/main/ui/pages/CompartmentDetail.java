@@ -25,20 +25,16 @@ public class CompartmentDetail implements ActionListener {
         // main panel starts here
         JPanel content = new JPanel();
         content.setLayout(new BorderLayout());
-        content.setBackground(Color.yellow);
         
         // navigation panel starts here
         JPanel wrapperPanel = new JPanel();
-        wrapperPanel.setBackground(Color.yellow);
         
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new BorderLayout());
         topPanel.setPreferredSize(new Dimension(1080, 60));
-        topPanel.setBackground(Color.yellow);
         topPanel.setBorder(BorderFactory.createLineBorder(Color.black, 1, true));
         
         JPanel buttonWrapper = new JPanel();
-        buttonWrapper.setBackground(Color.yellow);
         buttonWrapper.setBorder(new EmptyBorder(10, 50, 0, 0));
         
         JButton backButton = new JButton("Back to Warehouse");
@@ -51,7 +47,6 @@ public class CompartmentDetail implements ActionListener {
         topPanel.add(buttonWrapper, BorderLayout.WEST);
         
         JPanel titleWrapper = new JPanel();
-        titleWrapper.setBackground(Color.yellow);
         
         JLabel panelTitle = new JLabel(data.name);
         panelTitle.setForeground(Color.blue);
@@ -69,12 +64,10 @@ public class CompartmentDetail implements ActionListener {
         
         // compartment details starts here
         JPanel wrapperCompartmentPane = new JPanel();
-        wrapperCompartmentPane.setBackground(Color.yellow);
         
         JPanel compartmentPane = new JPanel();
         compartmentPane.setLayout(new BoxLayout(compartmentPane, BoxLayout.Y_AXIS));
         compartmentPane.setPreferredSize(new Dimension(1080, 550));
-        compartmentPane.setBackground(Color.yellow);
         compartmentPane.setBorder(BorderFactory.createLineBorder(Color.black, 1, true));
         
         compartmentPane.add(Box.createVerticalStrut(20));
@@ -126,7 +119,6 @@ public class CompartmentDetail implements ActionListener {
         
         // items section title starts here
         JPanel itemsTitlePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        itemsTitlePanel.setBackground(Color.yellow);
         
         JLabel itemsTitle = new JLabel("Items in Compartment:");
         itemsTitle.setFont(itemsTitle.getFont().deriveFont(Font.BOLD, 18f));
@@ -138,10 +130,8 @@ public class CompartmentDetail implements ActionListener {
         
         // items grid starts here
         JPanel itemsWrapper = new JPanel();
-        itemsWrapper.setBackground(Color.yellow);
         
         JPanel itemsGrid = new JPanel(new GridLayout(0, 3, 20, 20));
-        itemsGrid.setBackground(Color.yellow);
         itemsGrid.setPreferredSize(new Dimension(1020, 350));
         itemsGrid.setBorder(BorderFactory.createLineBorder(Color.black, 1, true));
         
