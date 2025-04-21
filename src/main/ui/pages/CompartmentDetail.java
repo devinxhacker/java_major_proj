@@ -5,28 +5,27 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
-import main.api.ApiSchema.*;
 import main.ui.components.Header;
+
+import main.jdbc.ItemDAO.Item;
+import main.jdbc.CategoryDAO.Category;
 
 public class CompartmentDetail implements ActionListener {
     
     private JFrame frame = new JFrame();
     
-    public CompartmentDetail(CategoryData data) {
+    public CompartmentDetail(Category data) {
         
         frame.setTitle("Compartment Details - " + data.name);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(1280, 720);
-        
-        // header starts here
+
         Header header = new Header(frame);
         frame.add(header, BorderLayout.NORTH);
         
-        // main panel starts here
         JPanel content = new JPanel();
         content.setLayout(new BorderLayout());
         
-        // navigation panel starts here
         JPanel wrapperPanel = new JPanel();
         
         JPanel topPanel = new JPanel();
@@ -60,9 +59,7 @@ public class CompartmentDetail implements ActionListener {
         
         wrapperPanel.add(topPanel);
         content.add(wrapperPanel, BorderLayout.NORTH);
-        // navigation panel ends here
         
-        // compartment details starts here
         JPanel wrapperCompartmentPane = new JPanel();
         
         JPanel compartmentPane = new JPanel();
@@ -72,7 +69,6 @@ public class CompartmentDetail implements ActionListener {
         
         compartmentPane.add(Box.createVerticalStrut(20));
         
-        // compartment overview starts here
         JPanel compartmentOverview = new JPanel();
         compartmentOverview.setLayout(new BoxLayout(compartmentOverview, BoxLayout.Y_AXIS));
         compartmentOverview.setBackground(Color.pink);
@@ -113,11 +109,9 @@ public class CompartmentDetail implements ActionListener {
         compartmentOverview.add(progressPanel);
                 
         compartmentPane.add(compartmentOverview);
-        // compartment overview ends here
         
         compartmentPane.add(Box.createVerticalStrut(20));
         
-        // items section title starts here
         JPanel itemsTitlePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         
         JLabel itemsTitle = new JLabel("Items in Compartment:");
@@ -126,16 +120,14 @@ public class CompartmentDetail implements ActionListener {
         
         itemsTitlePanel.add(itemsTitle);
         compartmentPane.add(itemsTitlePanel);
-        // items section title ends here        
         
-        // items grid starts here
         JPanel itemsWrapper = new JPanel();
         
         JPanel itemsGrid = new JPanel(new GridLayout(0, 3, 20, 20));
         itemsGrid.setPreferredSize(new Dimension(1020, 350));
         itemsGrid.setBorder(BorderFactory.createLineBorder(Color.black, 1, true));
         
-        for (ItemData item : data.items)
+        for (Item item : data.items)
         	itemsGrid.add(createItemCard(item));
         
         itemsWrapper.add(itemsGrid);
@@ -143,12 +135,11 @@ public class CompartmentDetail implements ActionListener {
         
         wrapperCompartmentPane.add(compartmentPane);
         content.add(wrapperCompartmentPane, BorderLayout.SOUTH);
-        // compartment details end here
         
         frame.add(content, BorderLayout.CENTER);
     }
     
-    private JPanel createItemCard(ItemData item) {
+    private JPanel createItemCard(Item item) {
         JPanel card = new JPanel();
         card.setBackground(Color.pink);
         card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
@@ -198,6 +189,6 @@ public class CompartmentDetail implements ActionListener {
     
     @Override
     public void actionPerformed(ActionEvent e) {
-        // Handle action events if needed
+        // TODO Auto-generated method stub
     }
 }
