@@ -286,14 +286,14 @@ public class JDBCService {
             SendReceivePayload payload = new SendReceivePayload();
             payload.itemId = request.itemId;
             payload.quantity = request.quantity;
-            String transactionType = request.requestType.toUpperCase(); // Convert to uppercase
+            String transactionType = request.requestType.toUpperCase();
             System.out.println(transactionType);
-            if (transactionType.equals("SEND")) { // Use equals() for string comparison
+            if (transactionType.equals("SEND")) {
                 BasicResponse res = sendTransaction(payload);
                 if (!res.success) {
                     return res;
                 }
-            } else if (transactionType.equals("RECEIVE")) { // Use equals() for string comparison
+            } else if (transactionType.equals("RECEIVE")) {
                 BasicResponse res = receiveTransaction(payload);
                 if (!res.success) {
                     return res;
@@ -304,10 +304,7 @@ public class JDBCService {
                 return response;
             }
             requestsDAO.updateRequestStatus(requestId, 1);
-            int transactionId = transactionDAO.createTransaction(request.itemId, request.quantity, transactionType); // transactionType
-                                                                                                                     // is
-                                                                                                                     // now
-                                                                                                                     // uppercase
+            int transactionId = transactionDAO.createTransaction(request.itemId, request.quantity, transactionType);
             requestsDAO.createAcceptedRequest(requestId, transactionId);
 
             response.success = true;
