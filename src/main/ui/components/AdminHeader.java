@@ -54,7 +54,7 @@ public class AdminHeader extends JPanel {
         
         JButton sendReceiveButton = createNavButton("Send/Receive");
         sendReceiveButton.addActionListener(e -> {
-        	SendReceive newFrame = new SendReceive();
+        	AdminSendReceive newFrame = new AdminSendReceive();
         	newFrame.show();
         	currentFrame.dispose();
         });
