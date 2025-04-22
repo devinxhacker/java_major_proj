@@ -13,7 +13,7 @@ import main.jdbc.JDBCService;
 import main.jdbc.JDBCService.*;
 import main.jdbc.ItemDAO.Item;
 
-public class SendReceive implements ActionListener {
+public class AdminSendReceive implements ActionListener {
 
 	JFrame frame = new JFrame();
 	private JTextField textField;
@@ -21,11 +21,11 @@ public class SendReceive implements ActionListener {
 	private JDBCService jdbcService;
 	private List<Item> itemsList;
 
-	public SendReceive() {
+	public AdminSendReceive() {
 		jdbcService = new JDBCService();
 		itemsList = new ArrayList<>();
 
-		frame.setTitle("Send/Receive Items");
+		frame.setTitle("Send/Receive Items - Admin");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(1280, 720);
 		frame.getContentPane().setBackground(new Color(245, 247, 250));
@@ -189,17 +189,19 @@ public class SendReceive implements ActionListener {
 				return;
 			}
 
-			String transactionType = type;
-			
-			CreateRequestPayload payload = new CreateRequestPayload();
+			SendReceivePayload payload = new SendReceivePayload();
 			payload.itemId = selectedItem.id;
 			payload.quantity = quantity;
-			payload.type = transactionType;
+			String transactionType = type;
 
 			SwingWorker<BasicResponse, Void> worker = new SwingWorker<BasicResponse, Void>() {
 				@Override
 				protected BasicResponse doInBackground() throws Exception {
-					return jdbcService.createRequest(payload);
+					if (transactionType.equals("send")) {
+						return jdbcService.sendTransaction(payload);
+					} else {
+						return jdbcService.receiveTransaction(payload);
+					}
 				}
 				
 				@Override
@@ -238,7 +240,7 @@ public class SendReceive implements ActionListener {
 	}
 
 	public static void main(String[] args) {
-		SendReceive obj = new SendReceive();
+		AdminSendReceive obj = new AdminSendReceive();
 		obj.show();
 	}
 

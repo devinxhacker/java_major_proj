@@ -169,7 +169,7 @@ public class JDBCService {
         return response;
     }
 
-    public BasicResponse sendTransaction(SendReceivePayload payload) {
+    public BasicResponse adminsendTransaction(SendReceivePayload payload) {
         BasicResponse response = new BasicResponse();
 
         try {
@@ -192,7 +192,94 @@ public class JDBCService {
 //            transactionDAO.createTransaction(payload.itemId, payload.quantity, "SEND");
 
             response.success = true;
-            response.message = "Item sent successfully";
+            response.message = "Items sent successfully";
+            System.out.println("adminsendTransaction Called");
+        } catch (SQLException e) {
+            System.err.println("Error in send transaction: " + e.getMessage());
+            response.success = false;
+            response.message = "Database error: " + e.getMessage();
+        }
+
+        return response;
+    }
+
+    public BasicResponse adminreceiveTransaction(SendReceivePayload payload) {
+        BasicResponse response = new BasicResponse();
+
+        try {
+            List<Item> items = itemDAO.getAllItems();
+            Item targetItem = null;
+
+            for (Item item : items) {
+                if (item.id == payload.itemId) {
+                    targetItem = item;
+                    break;
+                }
+            }
+
+            if (targetItem == null) {
+                response.success = false;
+                response.message = "Item not found";
+                return response;
+            }
+
+            boolean hasSpace = categoryDAO.checkSpaceForReceive(targetItem.categoryId, payload.quantity);
+
+            if (!hasSpace) {
+                response.success = false;
+                response.message = "Not enough space in the category for this quantity";
+                return response;
+            }
+
+            Item updatedItem = itemDAO.updateQuantity(payload.itemId, payload.quantity);
+
+            if (updatedItem == null) {
+                response.success = false;
+                response.message = "Failed to update item quantity";
+                return response;
+            }
+
+//            transactionDAO.createTransaction(payload.itemId, payload.quantity, "RECEIVE");
+
+            response.success = true;
+            response.message = "Items received successfully";
+            System.out.println("adminreceiveTransaction called");
+        } catch (SQLException e) {
+            System.err.println("Error in receive transaction: " + e.getMessage());
+            response.success = false;
+            response.message = "Database error: " + e.getMessage();
+        }
+
+        return response;
+    }
+    
+    
+    
+    public BasicResponse sendTransaction(SendReceivePayload payload) {
+        BasicResponse response = new BasicResponse();
+
+        try {
+            Item item = itemDAO.checkQuantityForSend(payload.itemId, payload.quantity);
+
+            if (item == null) {
+                response.success = false;
+                response.message = "Not enough quantity available for this item";
+                return response;
+            }
+
+            item = itemDAO.updateQuantity(payload.itemId, -payload.quantity);
+
+            if (item == null) {
+                response.success = false;
+                response.message = "Failed to update item quantity";
+                return response;
+            }
+
+            transactionDAO.createTransaction(payload.itemId, payload.quantity, "SEND");
+
+            response.success = true;
+            response.message = "Itema sent successfully";
+            System.out.println("sendtransaction called");
         } catch (SQLException e) {
             System.err.println("Error in send transaction: " + e.getMessage());
             response.success = false;
@@ -238,10 +325,11 @@ public class JDBCService {
                 return response;
             }
 
-//            transactionDAO.createTransaction(payload.itemId, payload.quantity, "RECEIVE");
+            transactionDAO.createTransaction(payload.itemId, payload.quantity, "RECEIVE");
 
             response.success = true;
-            response.message = "Item received successfully";
+            response.message = "Itema received successfully";
+            System.out.println("receivetransaction called");
         } catch (SQLException e) {
             System.err.println("Error in receive transaction: " + e.getMessage());
             response.success = false;
@@ -254,7 +342,7 @@ public class JDBCService {
     public BasicResponse createRequest(CreateRequestPayload payload) {
         BasicResponse response = new BasicResponse();
         try {
-            requestsDAO.createRequest(payload.itemId, payload.quantity, payload.type);
+            requestsDAO.createRequest(payload.itemId, payload.quantity, payload.type.toUpperCase());
             response.success = true;
             response.message = "Requested Successfully!";
         } catch (SQLException e) {
@@ -289,12 +377,12 @@ public class JDBCService {
             String transactionType = request.requestType.toUpperCase();
             System.out.println(transactionType);
             if (transactionType.equals("SEND")) {
-                BasicResponse res = sendTransaction(payload);
+                BasicResponse res = adminsendTransaction(payload);
                 if (!res.success) {
                     return res;
                 }
             } else if (transactionType.equals("RECEIVE")) {
-                BasicResponse res = receiveTransaction(payload);
+                BasicResponse res = adminreceiveTransaction(payload);
                 if (!res.success) {
                     return res;
                 }

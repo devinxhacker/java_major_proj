@@ -250,8 +250,8 @@ public class AdminPortal implements ActionListener {
 										acceptLoadingLabel.setText("");
 										acceptPanel.revalidate();
 										acceptPanel.repaint();
-										acceptRadio.setEnabled(true);
-										denyRadio.setEnabled(true);
+//										acceptRadio.setEnabled(true);
+//										denyRadio.setEnabled(true);
 									}
 								}
 							};
@@ -295,8 +295,8 @@ public class AdminPortal implements ActionListener {
 										denyLoadingLabel.setText("");
 										denyPanel.revalidate();
 										denyPanel.repaint();
-										acceptRadio.setEnabled(true);
-										denyRadio.setEnabled(true);
+//										acceptRadio.setEnabled(true);
+//										denyRadio.setEnabled(true);
 									}
 								}
 							};
