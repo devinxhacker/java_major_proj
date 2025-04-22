@@ -7,6 +7,7 @@ import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.*;
 
+import main.ui.components.EmployeeHeader;
 import main.jdbc.JDBCService;
 import main.jdbc.JDBCService.*;
 import main.jdbc.RequestsDAO.Request;
@@ -18,7 +19,6 @@ public class EmployeeRequests implements ActionListener {
     private JButton refreshButton;
     private JButton sendRequestButton;
     private JButton receiveRequestButton;
-    private JButton logoutButton;
     private JTable requestTable;
     private JScrollPane scrollPane;
     private JDBCService jdbcService;
@@ -32,13 +32,13 @@ public class EmployeeRequests implements ActionListener {
         this.employeeName = name;
         jdbcService = new JDBCService();
         
-        frame.setTitle("Employee Requests");
+        frame.setTitle("Employee Requests - " + employeeName);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(1280, 720);
         frame.getContentPane().setBackground(new Color(245, 247, 250));
         
-        JPanel headerPanel = createHeader();
-        frame.add(headerPanel, BorderLayout.NORTH);
+        EmployeeHeader header = new EmployeeHeader(frame, employeeName);
+        frame.add(header, BorderLayout.NORTH);
         
         contentPanel = new JPanel(new BorderLayout());
         contentPanel.setBackground(new Color(245, 247, 250));
@@ -141,45 +141,8 @@ public class EmployeeRequests implements ActionListener {
         fetchRequests();
     }
     
-    private JPanel createHeader() {
-        JPanel header = new JPanel();
-        header.setBackground(new Color(70, 130, 180));
-        header.setPreferredSize(new Dimension(1280, 50));
-        header.setLayout(new BorderLayout());
-        header.setBorder(BorderFactory.createLineBorder(Color.black));
-        
-        JLabel title = new JLabel("Warehouse Management System - Employee View");
-        title.setForeground(Color.WHITE);
-        title.setFont(new Font("Serif", Font.BOLD, 20));
-        title.setBorder(new EmptyBorder(0, 30, 0, 0));
-        header.add(title, BorderLayout.WEST);
-        
-        JPanel rightPanel = new JPanel();
-        rightPanel.setOpaque(false);
-        rightPanel.setBorder(new EmptyBorder(5, 0, 5, 30));
-        
-        JLabel employeeLabel = new JLabel("Welcome, " + employeeName);
-        employeeLabel.setForeground(Color.WHITE);
-        employeeLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
-        
-        logoutButton = new JButton("Logout");
-        logoutButton.setFocusPainted(false);
-        logoutButton.addActionListener(e -> {
-            EmployeeLogin login = new EmployeeLogin();
-            login.show();
-            frame.dispose();
-        });
-        
-        rightPanel.add(employeeLabel);
-        rightPanel.add(Box.createHorizontalStrut(20));
-        rightPanel.add(logoutButton);
-        
-        header.add(rightPanel, BorderLayout.EAST);
-        
-        return header;
-    }
-    
     public void show() {
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
     

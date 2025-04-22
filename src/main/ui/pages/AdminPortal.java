@@ -7,7 +7,7 @@ import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.*;
 
-import main.ui.components.Header;
+import main.ui.components.AdminHeader;
 import main.jdbc.JDBCService;
 import main.jdbc.JDBCService.*;
 import main.jdbc.RequestsDAO.Request;
@@ -27,12 +27,12 @@ public class AdminPortal implements ActionListener {
 	public AdminPortal() {
 		jdbcService = new JDBCService();
 
-		frame.setTitle("Admin Portal");
+		frame.setTitle("Admin Portal - Requests");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(1280, 720);
 		frame.getContentPane().setBackground(new Color(245, 247, 250));
 
-		Header header = new Header(frame);
+		AdminHeader header = new AdminHeader(frame);
 		frame.add(header, BorderLayout.NORTH);
 
 		contentPanel = new JPanel(new BorderLayout());
@@ -122,7 +122,7 @@ public class AdminPortal implements ActionListener {
 	}
 
 	public void show() {
-        frame.setLocationRelativeTo(null);
+		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 	}
 
