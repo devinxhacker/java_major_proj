@@ -15,12 +15,6 @@ public class TransactionDAO {
         public int quantity;
         public String type; // SEND or RECEIVE
         public Date date;
-        
-        @Override
-        public String toString() {
-            return String.format("Transaction[id=%d, item=%s, quantity=%d, type=%s]", 
-                    id, itemName, quantity, type);
-        }
     }
 
     public List<Transaction> getAllTransactions() throws SQLException {

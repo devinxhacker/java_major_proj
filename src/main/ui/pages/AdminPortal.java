@@ -7,7 +7,7 @@ import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.*;
 
-import main.ui.components.Header;
+import main.ui.components.AdminHeader;
 import main.jdbc.JDBCService;
 import main.jdbc.JDBCService.*;
 import main.jdbc.RequestsDAO.Request;
@@ -27,12 +27,12 @@ public class AdminPortal implements ActionListener {
 	public AdminPortal() {
 		jdbcService = new JDBCService();
 
-		frame.setTitle("Admin Portal");
+		frame.setTitle("Admin Portal - Requests");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(1280, 720);
 		frame.getContentPane().setBackground(new Color(245, 247, 250));
 
-		Header header = new Header(frame);
+		AdminHeader header = new AdminHeader(frame);
 		frame.add(header, BorderLayout.NORTH);
 
 		contentPanel = new JPanel(new BorderLayout());
@@ -60,9 +60,10 @@ public class AdminPortal implements ActionListener {
 
 		contentPanel.add(titlePanel, BorderLayout.NORTH);
 
-		// Table setup
 		String[] columnNames = { "Request ID", "Item Name", "Item ID", "Quantity", "Type", "Status", "Accept", "Deny" };
 		tableModel = new DefaultTableModel(columnNames, 0) {
+			private static final long serialVersionUID = -4361985463101194634L;
+
 			@Override
 			public Class<?> getColumnClass(int columnIndex) {
 				if (columnIndex == 6 || columnIndex == 7) {
@@ -83,7 +84,7 @@ public class AdminPortal implements ActionListener {
 		requestTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		requestTable.setDefaultRenderer(JPanel.class, new RadioButtonRenderer());
 		requestTable.setDefaultEditor(JPanel.class, new RadioButtonEditor(new JCheckBox()));
-		requestTable.setDefaultRenderer(String.class, new StatusRenderer()); // Custom renderer for status
+		requestTable.setDefaultRenderer(String.class, new StatusRenderer());
 		requestTable.getTableHeader().setFont(headerFont);
 		requestTable.setFont(tableFont);
 		requestTable.getColumnModel().getColumn(0).setPreferredWidth(80);
@@ -95,6 +96,8 @@ public class AdminPortal implements ActionListener {
 		requestTable.getColumnModel().getColumn(6).setPreferredWidth(80);
 		requestTable.getColumnModel().getColumn(7).setPreferredWidth(80);
 		requestTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+			private static final long serialVersionUID = -3755257743204870932L;
+
 			@Override
 			public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
 					boolean hasFocus, int row, int column) {
@@ -123,6 +126,7 @@ public class AdminPortal implements ActionListener {
 	}
 
 	public void show() {
+		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 	}
 
@@ -139,7 +143,7 @@ public class AdminPortal implements ActionListener {
 	}
 
 	private void fetchRequests() {
-		tableModel.setRowCount(0); // Clear existing data
+		tableModel.setRowCount(0);
 		SwingWorker<RequestResponse, Void> worker = new SwingWorker<RequestResponse, Void>() {
 			@Override
 			protected RequestResponse doInBackground() throws Exception {
@@ -168,7 +172,7 @@ public class AdminPortal implements ActionListener {
 	}
 
 	private void displayRequests(List<Request> requests) {
-		tableModel.setRowCount(0); // Clear existing data
+		tableModel.setRowCount(0);
 
 		if (requests == null || requests.isEmpty()) {
 			tableModel.addRow(new Object[] { "", "", "", "", "", "No requests found.", "", "" });
@@ -216,7 +220,7 @@ public class AdminPortal implements ActionListener {
 						if (acceptRadio.isSelected()) {
 							acceptLoadingLabel.setText("Accepting...");
 							acceptLoadingLabel.setForeground(Color.BLUE);
-							acceptPanel.revalidate(); // Force UI update
+							acceptPanel.revalidate();
 							acceptPanel.repaint();
 							acceptRadio.setEnabled(false);
 							denyRadio.setEnabled(false);
@@ -244,10 +248,10 @@ public class AdminPortal implements ActionListener {
 												JOptionPane.ERROR_MESSAGE);
 									} finally {
 										acceptLoadingLabel.setText("");
-										acceptPanel.revalidate(); // Force UI update
+										acceptPanel.revalidate();
 										acceptPanel.repaint();
-										// acceptRadio.setEnabled(true);
-										// denyRadio.setEnabled(true);
+										acceptRadio.setEnabled(true);
+										denyRadio.setEnabled(true);
 									}
 								}
 							};
@@ -261,7 +265,7 @@ public class AdminPortal implements ActionListener {
 						if (denyRadio.isSelected()) {
 							denyLoadingLabel.setText("Denying...");
 							denyLoadingLabel.setForeground(Color.RED);
-							denyPanel.revalidate(); // Force UI update
+							denyPanel.revalidate();
 							denyPanel.repaint();
 							acceptRadio.setEnabled(false);
 							denyRadio.setEnabled(false);
@@ -289,10 +293,10 @@ public class AdminPortal implements ActionListener {
 												JOptionPane.ERROR_MESSAGE);
 									} finally {
 										denyLoadingLabel.setText("");
-										denyPanel.revalidate(); // Force UI update
+										denyPanel.revalidate();
 										denyPanel.repaint();
-										// acceptRadio.setEnabled(true);
-										// denyRadio.setEnabled(true);
+										acceptRadio.setEnabled(true);
+										denyRadio.setEnabled(true);
 									}
 								}
 							};
@@ -306,7 +310,6 @@ public class AdminPortal implements ActionListener {
 		}
 	}
 
-	// Custom renderer for JRadioButton
 	class RadioButtonRenderer implements TableCellRenderer {
 		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
@@ -321,8 +324,8 @@ public class AdminPortal implements ActionListener {
 		}
 	}
 
-	// Custom editor for JRadioButton
 	class RadioButtonEditor extends DefaultCellEditor implements MouseListener {
+		private static final long serialVersionUID = -7678382049351614742L;
 		private JPanel panel;
 		private JRadioButton button;
 
@@ -377,17 +380,18 @@ public class AdminPortal implements ActionListener {
 		}
 	}
 
-	// Custom renderer for status column
 	class StatusRenderer extends DefaultTableCellRenderer {
+		private static final long serialVersionUID = 7216415647451900198L;
+
 		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
 				int row, int column) {
 			Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 			String status = (String) value;
 			if ("Accepted".equals(status)) {
-				c.setBackground(new Color(204, 255, 204)); // Light green
+				c.setBackground(new Color(204, 255, 204));
 			} else if ("Denied".equals(status)) {
-				c.setBackground(new Color(255, 204, 204)); // Light red
+				c.setBackground(new Color(255, 204, 204));
 			} else {
 				c.setBackground(table.getBackground());
 			}

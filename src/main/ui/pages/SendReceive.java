@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 
-import main.ui.components.Header;
+import main.ui.components.AdminHeader;
 
 import main.jdbc.JDBCService;
 import main.jdbc.JDBCService.*;
@@ -25,13 +25,13 @@ public class SendReceive implements ActionListener {
 		jdbcService = new JDBCService();
 		itemsList = new ArrayList<>();
 
-		frame.setTitle("Send/Receive");
+		frame.setTitle("Send/Receive Items - Admin");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(1280, 720);
-		frame.getContentPane().setBackground(new Color(255, 255, 255));
+		frame.getContentPane().setBackground(new Color(245, 247, 250));
 		frame.getContentPane().setLayout(new BorderLayout(0, 0));
 
-		Header header = new Header(frame);
+		AdminHeader header = new AdminHeader(frame);
 		frame.getContentPane().add(header, BorderLayout.NORTH);
 
 		JPanel panel = new JPanel();
@@ -233,6 +233,7 @@ public class SendReceive implements ActionListener {
 	}
 
 	public void show() {
+		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 	}
 

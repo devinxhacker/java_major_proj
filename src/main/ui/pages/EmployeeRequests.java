@@ -1,0 +1,369 @@
+package main.ui.pages;
+
+import java.awt.*;
+import java.awt.event.*;
+import java.util.List;
+import javax.swing.*;
+import javax.swing.border.*;
+import javax.swing.table.*;
+
+import main.ui.components.EmployeeHeader;
+import main.jdbc.JDBCService;
+import main.jdbc.JDBCService.*;
+import main.jdbc.RequestsDAO.Request;
+
+public class EmployeeRequests implements ActionListener {
+
+    private JFrame frame = new JFrame();
+    private JPanel contentPanel;
+    private JButton refreshButton;
+    private JButton sendRequestButton;
+    private JButton receiveRequestButton;
+    private JTable requestTable;
+    private JScrollPane scrollPane;
+    private JDBCService jdbcService;
+    private DefaultTableModel tableModel;
+    private Font tableFont = new Font("Arial", Font.PLAIN, 14);
+    private Font headerFont = new Font("Arial", Font.BOLD, 16);
+    
+    private String employeeName;
+    
+    public EmployeeRequests(String name) {
+        this.employeeName = name;
+        jdbcService = new JDBCService();
+        
+        frame.setTitle("Employee Requests - " + employeeName);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(1280, 720);
+        frame.getContentPane().setBackground(new Color(245, 247, 250));
+        
+        EmployeeHeader header = new EmployeeHeader(frame, employeeName);
+        frame.add(header, BorderLayout.NORTH);
+        
+        contentPanel = new JPanel(new BorderLayout());
+        contentPanel.setBackground(new Color(245, 247, 250));
+        
+        JPanel titlePanel = new JPanel(new BorderLayout(10, 10));
+        titlePanel.setBorder(new EmptyBorder(20, 40, 20, 40));
+        titlePanel.setBackground(new Color(245, 247, 250));
+        
+        JLabel title = new JLabel("Requests", SwingConstants.CENTER);
+        title.setFont(new Font("Serif", Font.BOLD, 28));
+        
+        JPanel controlsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        controlsPanel.setOpaque(false);
+        
+        refreshButton = new JButton("🔄 Refresh");
+        refreshButton.setFocusPainted(false);
+        refreshButton.setBackground(new Color(235, 240, 255));
+        refreshButton.setForeground(new Color(43, 85, 222));
+        refreshButton.setFont(new Font("SansSerif", Font.PLAIN, 16));
+        refreshButton.setBorder(new LineBorder(new Color(43, 85, 222), 1));
+        refreshButton.setPreferredSize(new Dimension(120, 40));
+        refreshButton.addActionListener(this);
+        
+        sendRequestButton = new JButton("Send Request");
+        sendRequestButton.setFocusPainted(false);
+        sendRequestButton.setBackground(new Color(235, 240, 255));
+        sendRequestButton.setForeground(new Color(43, 85, 222));
+        sendRequestButton.setFont(new Font("SansSerif", Font.PLAIN, 16));
+        sendRequestButton.setBorder(new LineBorder(new Color(43, 85, 222), 1));
+        sendRequestButton.setPreferredSize(new Dimension(150, 40));
+        sendRequestButton.addActionListener(this);
+        
+        receiveRequestButton = new JButton("Receive Request");
+        receiveRequestButton.setFocusPainted(false);
+        receiveRequestButton.setBackground(new Color(235, 240, 255));
+        receiveRequestButton.setForeground(new Color(43, 85, 222));
+        receiveRequestButton.setFont(new Font("SansSerif", Font.PLAIN, 16));
+        receiveRequestButton.setBorder(new LineBorder(new Color(43, 85, 222), 1));
+        receiveRequestButton.setPreferredSize(new Dimension(150, 40));
+        receiveRequestButton.addActionListener(this);
+        
+        controlsPanel.add(sendRequestButton);
+        controlsPanel.add(Box.createHorizontalStrut(10));
+        controlsPanel.add(receiveRequestButton);
+        controlsPanel.add(Box.createHorizontalStrut(20));
+        controlsPanel.add(refreshButton);
+        
+        titlePanel.add(title, BorderLayout.CENTER);
+        titlePanel.add(controlsPanel, BorderLayout.EAST);
+        
+        contentPanel.add(titlePanel, BorderLayout.NORTH);
+        
+        String[] columnNames = { "Request ID", "Item Name", "Item ID", "Quantity", "Type", "Status" };
+        tableModel = new DefaultTableModel(columnNames, 0) {
+			private static final long serialVersionUID = -7808548067883688534L;
+
+			@Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        
+        requestTable = new JTable(tableModel);
+        requestTable.setRowHeight(30);
+        requestTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        requestTable.getTableHeader().setFont(headerFont);
+        requestTable.setFont(tableFont);
+        requestTable.getColumnModel().getColumn(0).setPreferredWidth(80);
+        requestTable.getColumnModel().getColumn(1).setPreferredWidth(150);
+        requestTable.getColumnModel().getColumn(2).setPreferredWidth(80);
+        requestTable.getColumnModel().getColumn(3).setPreferredWidth(80);
+        requestTable.getColumnModel().getColumn(4).setPreferredWidth(80);
+        requestTable.getColumnModel().getColumn(5).setPreferredWidth(100);
+        
+        requestTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+			private static final long serialVersionUID = 151668628600733011L;
+
+			@Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+                    boolean hasFocus, int row, int column) {
+                final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row,
+                        column);
+                c.setFont(tableFont);
+                setBorder(new EmptyBorder(5, 10, 5, 10));
+                if (row % 2 == 0) {
+                    c.setBackground(new Color(240, 240, 240));
+                } else {
+                    c.setBackground(table.getBackground());
+                }
+                return c;
+            }
+        });
+        
+        scrollPane = new JScrollPane(requestTable);
+        scrollPane.setBorder(new EmptyBorder(10, 40, 10, 40));
+        scrollPane.getViewport().setBackground(new Color(245, 247, 250));
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        
+        contentPanel.add(scrollPane, BorderLayout.CENTER);
+        frame.add(contentPanel, BorderLayout.CENTER);
+        
+        fetchRequests();
+    }
+    
+    public void show() {
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+    }
+    
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == refreshButton) {
+            fetchRequests();
+        } else if (e.getSource() == sendRequestButton) {
+            showCreateRequestDialog("SEND");
+        } else if (e.getSource() == receiveRequestButton) {
+            showCreateRequestDialog("RECEIVE");
+        }
+    }
+    
+    private void fetchRequests() {
+        tableModel.setRowCount(0);
+        tableModel.addRow(new Object[] { "Loading...", "", "", "", "", "" });
+        
+        SwingWorker<RequestResponse, Void> worker = new SwingWorker<RequestResponse, Void>() {
+            @Override
+            protected RequestResponse doInBackground() throws Exception {
+                return jdbcService.fetchAllRequests();
+            }
+            
+            @Override
+            protected void done() {
+                try {
+                    RequestResponse response = get();
+                    tableModel.setRowCount(0);
+                    
+                    if (response != null && response.success) {
+                        displayRequests(response.data);
+                    } else {
+                        tableModel.addRow(new Object[] { "", "Failed to load requests. Please try again.", "", "", "", "" });
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error fetching requests: " + e.getMessage());
+                    tableModel.setRowCount(0);
+                    tableModel.addRow(new Object[] { "", "Error loading requests. Please try again.", "", "", "", "" });
+                }
+            }
+        };
+        
+        worker.execute();
+    }
+    
+    private void displayRequests(List<Request> requests) {
+        if (requests == null || requests.isEmpty()) {
+            tableModel.addRow(new Object[] { "", "No requests found.", "", "", "", "" });
+        } else {
+            for (Request r : requests) {
+                String statusText;
+                if (r.status == 1) {
+                    statusText = "Accepted";
+                } else if (r.status == 0) {
+                    statusText = "Denied";
+                } else {
+                    statusText = "Pending";
+                }
+                
+                tableModel.addRow(new Object[] {
+                    r.requestId,
+                    r.itemName,
+                    r.itemId,
+                    r.quantity,
+                    r.requestType,
+                    statusText
+                });
+            }
+        }
+    }
+    
+    private void showCreateRequestDialog(String requestType) {
+        SwingWorker<ItemsResponse, Void> worker = new SwingWorker<ItemsResponse, Void>() {
+            @Override
+            protected ItemsResponse doInBackground() throws Exception {
+                return jdbcService.fetchAllItems();
+            }
+            
+            @Override
+            protected void done() {
+                try {
+                    ItemsResponse response = get();
+                    if (response != null && response.success && !response.data.isEmpty()) {
+                        JDialog dialog = new JDialog(frame, "Create " + requestType + " Request", true);
+                        dialog.setSize(400, 300);
+                        dialog.setLayout(new BorderLayout());
+                        
+                        JPanel panel = new JPanel();
+                        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+                        panel.setBorder(new EmptyBorder(20, 20, 20, 20));
+                        
+                        JLabel titleLabel = new JLabel("Create " + requestType + " Request");
+                        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 18));
+                        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+                        
+                        JPanel itemPanel = new JPanel();
+                        itemPanel.setLayout(new BoxLayout(itemPanel, BoxLayout.Y_AXIS));
+                        itemPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+                        itemPanel.setMaximumSize(new Dimension(350, 70));
+                        
+                        JLabel itemLabel = new JLabel("Select Item:");
+                        DefaultComboBoxModel<String> itemModel = new DefaultComboBoxModel<>();
+                        
+                        int[] itemIds = new int[response.data.size()];
+                        int index = 0;
+                        
+                        for (var item : response.data) {
+                            itemModel.addElement(item.name);
+                            itemIds[index++] = item.id;
+                        }
+                        
+                        JComboBox<String> itemComboBox = new JComboBox<>(itemModel);
+                        
+                        itemPanel.add(itemLabel);
+                        itemPanel.add(Box.createVerticalStrut(5));
+                        itemPanel.add(itemComboBox);
+                        
+                        JPanel quantityPanel = new JPanel();
+                        quantityPanel.setLayout(new BoxLayout(quantityPanel, BoxLayout.Y_AXIS));
+                        quantityPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+                        quantityPanel.setMaximumSize(new Dimension(350, 70));
+                        
+                        JLabel quantityLabel = new JLabel("Quantity:");
+                        JTextField quantityField = new JTextField();
+                        
+                        quantityPanel.add(quantityLabel);
+                        quantityPanel.add(Box.createVerticalStrut(5));
+                        quantityPanel.add(quantityField);
+                        
+                        JPanel buttonsPanel = new JPanel();
+                        buttonsPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+                        
+                        JButton submitButton = new JButton("Submit");
+                        JButton cancelButton = new JButton("Cancel");
+                        
+                        buttonsPanel.add(submitButton);
+                        buttonsPanel.add(cancelButton);
+                        
+                        panel.add(titleLabel);
+                        panel.add(Box.createVerticalStrut(20));
+                        panel.add(itemPanel);
+                        panel.add(Box.createVerticalStrut(10));
+                        panel.add(quantityPanel);
+                        panel.add(Box.createVerticalStrut(20));
+                        panel.add(buttonsPanel);
+                        
+                        JPanel wrapperPanel = new JPanel(new GridBagLayout());
+                        wrapperPanel.add(panel);
+                        
+                        dialog.add(wrapperPanel);
+                        
+                        submitButton.addActionListener(e -> {
+                            try {
+                                int quantity = Integer.parseInt(quantityField.getText().trim());
+                                int selectedItemIndex = itemComboBox.getSelectedIndex();
+                                int itemId = itemIds[selectedItemIndex];
+                                
+                                if (quantity <= 0) {
+                                    JOptionPane.showMessageDialog(dialog, "Quantity must be greater than zero", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+                                    return;
+                                }
+                                
+                                dialog.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                                
+                                SwingWorker<BasicResponse, Void> requestWorker = new SwingWorker<BasicResponse, Void>() {
+                                    @Override
+                                    protected BasicResponse doInBackground() throws Exception {
+                                        CreateRequestPayload payload = new CreateRequestPayload();
+                                        payload.itemId = itemId;
+                                        payload.quantity = quantity;
+                                        payload.type = requestType;
+                                        return jdbcService.createRequest(payload);
+                                    }
+                                    
+                                    @Override
+                                    protected void done() {
+                                        dialog.setCursor(Cursor.getDefaultCursor());
+                                        try {
+                                            BasicResponse response = get();
+                                            if (response.success) {
+                                                JOptionPane.showMessageDialog(dialog, "Request created successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+                                                dialog.dispose();
+                                                fetchRequests();
+                                            } else {
+                                                JOptionPane.showMessageDialog(dialog, response.message, "Error", JOptionPane.ERROR_MESSAGE);
+                                            }
+                                        } catch (Exception ex) {
+                                            JOptionPane.showMessageDialog(dialog, "Error creating request: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                                        }
+                                    }
+                                };
+                                
+                                requestWorker.execute();
+                                
+                            } catch (NumberFormatException ex) {
+                                JOptionPane.showMessageDialog(dialog, "Please enter a valid number for quantity", "Invalid Input", JOptionPane.ERROR_MESSAGE);
+                            }
+                        });
+                        
+                        cancelButton.addActionListener(e -> dialog.dispose());
+                        
+                        dialog.setLocationRelativeTo(frame);
+                        dialog.setVisible(true);
+                        
+                    } else {
+                        JOptionPane.showMessageDialog(frame, "Failed to load items. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(frame, "Error loading items: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        };
+        
+        worker.execute();
+    }
+    
+    public static void main(String[] args) {
+        EmployeeRequests requests = new EmployeeRequests("Test Employee");
+        requests.show();
+    }
+} 

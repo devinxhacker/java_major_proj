@@ -5,7 +5,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
-import main.ui.components.Header;
+import main.ui.components.AdminHeader;
 
 import main.jdbc.ItemDAO.Item;
 import main.jdbc.CategoryDAO.Category;
@@ -16,11 +16,12 @@ public class CompartmentDetail implements ActionListener {
     
     public CompartmentDetail(Category data) {
         
-        frame.setTitle("Compartment Details - " + data.name);
+        frame.setTitle("Compartment Detail - " + data.name + " - Admin");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(1280, 720);
+        frame.getContentPane().setBackground(new Color(245, 247, 250));
 
-        Header header = new Header(frame);
+        AdminHeader header = new AdminHeader(frame);
         frame.add(header, BorderLayout.NORTH);
         
         JPanel content = new JPanel();
@@ -184,6 +185,7 @@ public class CompartmentDetail implements ActionListener {
     }
     
     public void show() {
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
     

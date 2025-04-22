@@ -6,7 +6,7 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.border.*;
 
-import main.ui.components.Header;
+import main.ui.components.AdminHeader;
 
 import main.jdbc.JDBCService;
 import main.jdbc.JDBCService.*;
@@ -24,12 +24,12 @@ public class Transactions implements ActionListener {
 	public Transactions() {
 		jdbcService = new JDBCService();
 		
-		frame.setTitle("Transactions ");
+		frame.setTitle("Transactions History - Admin");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(1280, 720);
 		frame.getContentPane().setBackground(new Color(245, 247, 250));
 
-		Header header = new Header(frame);
+		AdminHeader header = new AdminHeader(frame);
 		frame.add(header, BorderLayout.NORTH);
 
 		contentPanel = new JPanel(new BorderLayout());
@@ -80,6 +80,7 @@ public class Transactions implements ActionListener {
 	}
 
 	public void show() {
+		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 	}
 

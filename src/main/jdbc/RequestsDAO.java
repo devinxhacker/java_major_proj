@@ -15,12 +15,6 @@ public class RequestsDAO {
         public Date requestDate;
         public int status;
         public String itemName;
-
-        @Override
-        public String toString() {
-            return String.format("Request[id=%d, item=%s, quantity=%d, type=%s, status=%d]",
-                    requestId, itemName, quantity, requestType, status);
-        }
     }
 
     public static class AcceptedRequest {

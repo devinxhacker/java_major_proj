@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-import main.ui.components.Header;
+import main.ui.components.AdminHeader;
 
 public class Home implements ActionListener {
 	
@@ -12,20 +12,17 @@ public class Home implements ActionListener {
 	
 	public Home() {
 		
-		frame.setTitle("Home");
+		frame.setTitle("Home - Admin");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(1280, 720);
-		frame.getContentPane().setBackground(Color.magenta);
+		frame.getContentPane().setBackground(new Color(245, 247, 250));
 		
-		// header starts here
-		Header header = new Header(frame);
+		AdminHeader header = new AdminHeader(frame);
 		frame.add(header, BorderLayout.NORTH);
-		// header ends here
 
 		JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new BorderLayout());
 
-        // Welcome Panel
         JPanel welcomePanel = new JPanel();
         welcomePanel.setBackground(new Color(180, 210, 255));
         welcomePanel.setBorder(BorderFactory.createEmptyBorder(30, 80, 50, 80));
@@ -78,6 +75,7 @@ public class Home implements ActionListener {
 	}
 	
 	public void show() {
+        frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 	}
 
