@@ -88,12 +88,10 @@ public class AdminLogin implements ActionListener {
         loginButton.addActionListener(this);
         
         loginButton.addMouseListener(new MouseAdapter() {
-            @Override
             public void mouseEntered(MouseEvent e) {
                 loginButton.setBackground(PRIMARY_HOVER_COLOR);
             }
             
-            @Override
             public void mouseExited(MouseEvent e) {
                 loginButton.setBackground(PRIMARY_COLOR);
             }
@@ -114,13 +112,11 @@ public class AdminLogin implements ActionListener {
         });
         
         employeeLoginButton.addMouseListener(new MouseAdapter() {
-            @Override
             public void mouseEntered(MouseEvent e) {
                 employeeLoginButton.setForeground(PRIMARY_HOVER_COLOR);
                 employeeLoginButton.setText("<html><u>Employee Login</u></html>");
             }
             
-            @Override
             public void mouseExited(MouseEvent e) {
                 employeeLoginButton.setForeground(PRIMARY_COLOR);
                 employeeLoginButton.setText("Employee Login");
@@ -155,7 +151,6 @@ public class AdminLogin implements ActionListener {
         frame.add(wrapperPanel);
         
         usernameField.addKeyListener(new KeyAdapter() {
-            @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                     passwordField.requestFocus();
@@ -164,7 +159,6 @@ public class AdminLogin implements ActionListener {
         });
         
         passwordField.addKeyListener(new KeyAdapter() {
-            @Override
             public void keyPressed(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                     loginAdmin();

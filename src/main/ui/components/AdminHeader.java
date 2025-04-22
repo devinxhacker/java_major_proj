@@ -1,6 +1,7 @@
 package main.ui.components;
 
 import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
@@ -96,8 +97,8 @@ public class AdminHeader extends JPanel {
         button.setFocusPainted(false);
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
         
-        button.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
+        button.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent evt) {
                 if (!text.equals("Logout")) {
                     button.setBackground(new Color(60, 116, 162));
                 } else {
@@ -105,7 +106,7 @@ public class AdminHeader extends JPanel {
                 }
             }
             
-            public void mouseExited(java.awt.event.MouseEvent evt) {
+            public void mouseExited(MouseEvent evt) {
                 if (!text.equals("Logout")) {
                     button.setBackground(HEADER_COLOR);
                 } else {

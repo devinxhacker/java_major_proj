@@ -114,7 +114,9 @@ public class EmployeeRequests implements ActionListener {
         requestTable.getColumnModel().getColumn(5).setPreferredWidth(100);
         
         requestTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
-            @Override
+			private static final long serialVersionUID = 151668628600733011L;
+
+			@Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
                     boolean hasFocus, int row, int column) {
                 final Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row,

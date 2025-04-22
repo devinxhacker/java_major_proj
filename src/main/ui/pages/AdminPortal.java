@@ -62,6 +62,8 @@ public class AdminPortal implements ActionListener {
 
 		String[] columnNames = { "Request ID", "Item Name", "Item ID", "Quantity", "Type", "Status", "Accept", "Deny" };
 		tableModel = new DefaultTableModel(columnNames, 0) {
+			private static final long serialVersionUID = -4361985463101194634L;
+
 			@Override
 			public Class<?> getColumnClass(int columnIndex) {
 				if (columnIndex == 6 || columnIndex == 7) {
@@ -94,6 +96,8 @@ public class AdminPortal implements ActionListener {
 		requestTable.getColumnModel().getColumn(6).setPreferredWidth(80);
 		requestTable.getColumnModel().getColumn(7).setPreferredWidth(80);
 		requestTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+			private static final long serialVersionUID = -3755257743204870932L;
+
 			@Override
 			public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
 					boolean hasFocus, int row, int column) {
@@ -321,6 +325,7 @@ public class AdminPortal implements ActionListener {
 	}
 
 	class RadioButtonEditor extends DefaultCellEditor implements MouseListener {
+		private static final long serialVersionUID = -7678382049351614742L;
 		private JPanel panel;
 		private JRadioButton button;
 
@@ -376,6 +381,8 @@ public class AdminPortal implements ActionListener {
 	}
 
 	class StatusRenderer extends DefaultTableCellRenderer {
+		private static final long serialVersionUID = 7216415647451900198L;
+
 		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
 				int row, int column) {

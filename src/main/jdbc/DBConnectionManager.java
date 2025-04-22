@@ -55,28 +55,4 @@ public class DBConnectionManager {
             System.err.println("Error closing Connection: " + e.getMessage());
         }
     }
-
-    public boolean testConnection() {
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        
-        try {
-            conn = getConnection();
-            stmt = conn.prepareStatement("SELECT 1");
-            rs = stmt.executeQuery();
-            
-            if (rs.next()) {
-                System.out.println("Database connection test successful");
-                return true;
-            }
-            
-            return false;
-        } catch (SQLException e) {
-            System.err.println("Database connection test failed: " + e.getMessage());
-            return false;
-        } finally {
-            closeResources(conn, stmt, rs);
-        }
-    }
 } 

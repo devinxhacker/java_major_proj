@@ -19,12 +19,6 @@ public class CategoryDAO {
         public Category() {
             this.items = new ArrayList<>();
         }
-        
-        @Override
-        public String toString() {
-            return String.format("Category[id=%d, name=%s, usage=%d/%d (%d%%)]", 
-                    id, name, currentCapacity, maxCapacity, utilizationPercentage);
-        }
     }
     
     public List<Category> getAllCategories() throws SQLException {
