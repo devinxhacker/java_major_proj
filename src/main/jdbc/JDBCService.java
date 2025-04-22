@@ -7,6 +7,7 @@ import main.jdbc.CategoryDAO.Category;
 import main.jdbc.ItemDAO.Item;
 import main.jdbc.TransactionDAO.Transaction;
 import main.jdbc.RequestsDAO.Request;
+import main.jdbc.EmployeesDAO.Employee;
 
 public class JDBCService {
 
@@ -14,6 +15,7 @@ public class JDBCService {
     private ItemDAO itemDAO;
     private TransactionDAO transactionDAO;
     private RequestsDAO requestsDAO;
+    private EmployeesDAO employeesDAO;
 
     public static class RequestResponse {
         public boolean success;
@@ -76,11 +78,35 @@ public class JDBCService {
         public String type;
     }
 
+    public static class AuthResponse {
+        public boolean success;
+        public Employee data;
+        public String message;
+
+        public AuthResponse() {
+            this.success = false;
+            this.data = null;
+            this.message = "";
+        }
+    }
+
+    public static class RegisterPayload {
+        public String username;
+        public String password;
+        public String name;
+    }
+
+    public static class LoginPayload {
+        public String username;
+        public String password;
+    }
+
     public JDBCService() {
         this.categoryDAO = new CategoryDAO();
         this.itemDAO = new ItemDAO();
         this.transactionDAO = new TransactionDAO();
         this.requestsDAO = new RequestsDAO();
+        this.employeesDAO = new EmployeesDAO();
     }
 
     public RequestResponse fetchAllRequests() {
@@ -304,6 +330,91 @@ public class JDBCService {
             response.message = "Request denied successfully";
         } catch (SQLException e) {
             System.err.println("Error denying request: " + e.getMessage());
+            response.success = false;
+            response.message = "Database error: " + e.getMessage();
+        }
+
+        return response;
+    }
+
+    public AuthResponse registerEmployee(RegisterPayload payload) {
+        AuthResponse response = new AuthResponse();
+
+        try {
+            if (payload.username == null || payload.username.trim().isEmpty()) {
+                response.success = false;
+                response.message = "Username cannot be empty";
+                return response;
+            }
+
+            if (payload.password == null || payload.password.trim().isEmpty()) {
+                response.success = false;
+                response.message = "Password cannot be empty";
+                return response;
+            }
+
+            if (payload.name == null || payload.name.trim().isEmpty()) {
+                response.success = false;
+                response.message = "Name cannot be empty";
+                return response;
+            }
+
+            Employee employee = employeesDAO.registerEmployee(
+                payload.username.trim(), 
+                payload.password.trim(), 
+                payload.name.trim()
+            );
+
+            if (employee == null) {
+                response.success = false;
+                response.message = "Username already exists";
+                return response;
+            }
+
+            response.success = true;
+            response.data = employee;
+            response.message = "Registration successful";
+        } catch (SQLException e) {
+            System.err.println("Error in employee registration: " + e.getMessage());
+            response.success = false;
+            response.message = "Database error: " + e.getMessage();
+        }
+
+        return response;
+    }
+
+    public AuthResponse loginEmployee(LoginPayload payload) {
+        AuthResponse response = new AuthResponse();
+
+        try {
+            if (payload.username == null || payload.username.trim().isEmpty()) {
+                response.success = false;
+                response.message = "Username cannot be empty";
+                return response;
+            }
+
+            if (payload.password == null || payload.password.trim().isEmpty()) {
+                response.success = false;
+                response.message = "Password cannot be empty";
+                return response;
+            }
+
+            Employee employee = employeesDAO.loginEmployee(
+                payload.username.trim(), 
+                payload.password.trim()
+            );
+
+            if (employee == null) {
+                response.success = false;
+                response.message = "Invalid username or password";
+                return response;
+            }
+
+            response.success = true;
+            response.data = employee;
+            response.message = "Login successful";
+        } catch (SQLException e) {
+            System.err.println("Error in employee login: " + e.getMessage());
             response.success = false;
             response.message = "Database error: " + e.getMessage();
         }
