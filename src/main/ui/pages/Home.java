@@ -63,7 +63,7 @@ public class Home implements ActionListener {
 		
 		JButton sendReceiveButton = new JButton("Send/Receive Items");
 		sendReceiveButton.addActionListener(e -> {
-            SendReceive newFrame = new SendReceive();
+            AdminSendReceive newFrame = new AdminSendReceive();
             newFrame.show();
 		});
 		
@@ -128,7 +128,7 @@ public class Home implements ActionListener {
 	        frame.dispose();
 	        switch (buttonText) {
 	            case "View Warehouse" -> new Warehouse().show();
-	            case "Send/Receive Items" -> new SendReceive().show();
+	            case "Send/Receive Items" -> new AdminSendReceive().show();
 	            case "View Transactions" -> new Transactions().show();
 	            default -> JOptionPane.showMessageDialog(frame, "Unknown action: " + buttonText);
 	        }
