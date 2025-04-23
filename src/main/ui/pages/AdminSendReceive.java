@@ -221,7 +221,7 @@ public class AdminSendReceive implements ActionListener {
 					} catch (Exception e) {
 						JOptionPane.showMessageDialog(frame, "An unexpected error occurred: " + e.getMessage(), "Error",
 								JOptionPane.ERROR_MESSAGE);
-					}
+					} 
 				}
 			};
 			
@@ -245,9 +245,7 @@ public class AdminSendReceive implements ActionListener {
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void actionPerformed(ActionEvent e) { 	
+	} 
 
 }

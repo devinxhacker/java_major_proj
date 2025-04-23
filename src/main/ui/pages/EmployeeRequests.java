@@ -236,7 +236,6 @@ public class EmployeeRequests implements ActionListener {
                         dialog.setLayout(new BorderLayout());
                         dialog.getContentPane().setBackground(new Color(245, 247, 250));
                         
-                        // Title Panel
                         JPanel titlePanel = new JPanel(new BorderLayout());
                         titlePanel.setBackground(new Color(245, 247, 250));
                         titlePanel.setBorder(new EmptyBorder(20, 30, 20, 30));
@@ -246,14 +245,12 @@ public class EmployeeRequests implements ActionListener {
                         titleLabel.setForeground(new Color(30, 64, 175));
                         titlePanel.add(titleLabel, BorderLayout.CENTER);
                         
-                        // Content Panel
                         JPanel contentPanel = new JPanel();
                         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
                         contentPanel.setBackground(new Color(245, 247, 250));
                         contentPanel.setBorder(new EmptyBorder(0, 30, 20, 30));
                         contentPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
                         
-                        // Item Selection Panel
                         JPanel itemPanel = new JPanel();
                         itemPanel.setLayout(new BoxLayout(itemPanel, BoxLayout.Y_AXIS));
                         itemPanel.setBackground(new Color(245, 247, 250));
@@ -284,7 +281,6 @@ public class EmployeeRequests implements ActionListener {
                         itemPanel.add(Box.createVerticalStrut(8));
                         itemPanel.add(itemComboBox);
                         
-                        // Quantity Panel
                         JPanel quantityPanel = new JPanel();
                         quantityPanel.setLayout(new BoxLayout(quantityPanel, BoxLayout.Y_AXIS));
                         quantityPanel.setBackground(new Color(245, 247, 250));
@@ -328,7 +324,6 @@ public class EmployeeRequests implements ActionListener {
                         cancelButton.setPreferredSize(new Dimension(120, 40));
                         cancelButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
                         
-                        // Add hover effects
                         submitButton.addMouseListener(new MouseAdapter() {
                             public void mouseEntered(MouseEvent e) {
                                 submitButton.setBackground(new Color(37, 99, 235));
@@ -350,7 +345,6 @@ public class EmployeeRequests implements ActionListener {
                         buttonsPanel.add(submitButton);
                         buttonsPanel.add(cancelButton);
                         
-                        // Add all panels to content panel with proper alignment
                         contentPanel.add(Box.createVerticalStrut(20));
                         contentPanel.add(itemPanel);
                         contentPanel.add(Box.createVerticalStrut(20));
@@ -358,7 +352,6 @@ public class EmployeeRequests implements ActionListener {
                         contentPanel.add(Box.createVerticalStrut(30));
                         contentPanel.add(buttonsPanel);
                         
-                        // Add panels to dialog
                         dialog.add(titlePanel, BorderLayout.NORTH);
                         dialog.add(contentPanel, BorderLayout.CENTER);
                         

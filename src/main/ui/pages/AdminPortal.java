@@ -297,8 +297,6 @@ public class AdminPortal implements ActionListener {
 										denyLoadingLabel.setText("");
 										denyPanel.revalidate();
 										denyPanel.repaint();
-//										acceptRadio.setEnabled(true);
-//										denyRadio.setEnabled(true);
 									}
 								}
 							};

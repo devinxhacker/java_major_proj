@@ -21,7 +21,6 @@ public class Warehouse implements ActionListener, ComponentListener {
 	private static final Color ACCENT_COLOR = new Color(59, 130, 246); // Light blue
 	private static final Color SUCCESS_COLOR = new Color(16, 185, 129); // Emerald green
 	private static final Color WARNING_COLOR = new Color(245, 158, 11); // Amber
-	private static final Color DANGER_COLOR = new Color(239, 68, 68); // Red
 	
 	private JFrame frame = new JFrame();
 	private static JPanel compartments = new JPanel();
@@ -55,7 +54,7 @@ public class Warehouse implements ActionListener, ComponentListener {
 		));
 		
 		JLabel panelTitle = new JLabel("Warehouse Compartments");
-		panelTitle.setForeground(new Color(15, 23, 42)); // Dark slate
+		panelTitle.setForeground(new Color(15, 23, 42)); 
 		panelTitle.setFont(new Font("Segoe UI", Font.BOLD, 24));
 		panelTitle.setBorder(new EmptyBorder(0, 40, 0, 0));
 		topPanel.add(panelTitle, BorderLayout.WEST);
@@ -72,7 +71,6 @@ public class Warehouse implements ActionListener, ComponentListener {
 		refreshButton.setBorderPainted(false);
 		refreshButton.setPreferredSize(new Dimension(100, 35));
 		
-		// Add hover effect
 		refreshButton.addMouseListener(new MouseAdapter() {
 			public void mouseEntered(MouseEvent e) {
 				refreshButton.setBackground(ACCENT_COLOR);
@@ -121,16 +119,14 @@ public class Warehouse implements ActionListener, ComponentListener {
 			BorderFactory.createEmptyBorder(20, 20, 20, 20)
 		));
 		
-		// Set a minimum size for the card to ensure the button is visible
 		card.setMinimumSize(new Dimension(300, 350));
 		card.setPreferredSize(new Dimension(300, 350));
 		
-		// Add a rigid area at the top to ensure consistent spacing
 		card.add(Box.createVerticalStrut(10));
 		
 		JLabel compartmentNameLabel = new JLabel(compartmentName);
 		compartmentNameLabel.setFont(new Font("Segoe UI", Font.BOLD, 20));
-		compartmentNameLabel.setForeground(new Color(15, 23, 42)); // Dark slate
+		compartmentNameLabel.setForeground(new Color(15, 23, 42)); 
 		compartmentNameLabel.setAlignmentX(Container.CENTER_ALIGNMENT);
 		card.add(compartmentNameLabel);
 		
@@ -138,7 +134,7 @@ public class Warehouse implements ActionListener, ComponentListener {
 		
 		JLabel totalCapacityLabel = new JLabel("Total Capacity: " + totalCapacity);
 		totalCapacityLabel.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-		totalCapacityLabel.setForeground(new Color(71, 85, 105)); // Slate gray
+		totalCapacityLabel.setForeground(new Color(71, 85, 105)); 
 		totalCapacityLabel.setAlignmentX(Container.CENTER_ALIGNMENT);
 		card.add(totalCapacityLabel);
 		
@@ -146,7 +142,7 @@ public class Warehouse implements ActionListener, ComponentListener {
 		
 		JLabel spaceUsedLabel = new JLabel("Space Used: " + spaceUsed);
 		spaceUsedLabel.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-		spaceUsedLabel.setForeground(new Color(71, 85, 105)); // Slate gray
+		spaceUsedLabel.setForeground(new Color(71, 85, 105));
 		spaceUsedLabel.setAlignmentX(Container.CENTER_ALIGNMENT);
 		card.add(spaceUsedLabel);
 		
@@ -154,7 +150,7 @@ public class Warehouse implements ActionListener, ComponentListener {
 		
 		JLabel spaceAvailableLabel = new JLabel("Available Space: " + (totalCapacity - spaceUsed));
 		spaceAvailableLabel.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-		spaceAvailableLabel.setForeground(new Color(71, 85, 105)); // Slate gray
+		spaceAvailableLabel.setForeground(new Color(71, 85, 105)); 
 		spaceAvailableLabel.setAlignmentX(Container.CENTER_ALIGNMENT);
 		card.add(spaceAvailableLabel);
 		
@@ -164,15 +160,13 @@ public class Warehouse implements ActionListener, ComponentListener {
 		spaceBar.setValue(spaceUsed);
 		spaceBar.setStringPainted(true);
 		spaceBar.setForeground(spaceUsed > totalCapacity * 0.8 ? WARNING_COLOR : SUCCESS_COLOR);
-		spaceBar.setBackground(new Color(226, 232, 240)); // Light gray
+		spaceBar.setBackground(new Color(226, 232, 240)); 
 		spaceBar.setMaximumSize(new Dimension(200, 20));
 		spaceBar.setAlignmentX(Container.CENTER_ALIGNMENT);
 		card.add(spaceBar);
 		
-		// Add flexible space to push the button to the bottom
 		card.add(Box.createVerticalGlue());
 		
-		// Create a panel for the button with proper margins
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
 		buttonPanel.setBackground(CARD_BACKGROUND);
@@ -189,7 +183,6 @@ public class Warehouse implements ActionListener, ComponentListener {
 		detailsButton.setPreferredSize(new Dimension(150, 35));
 		detailsButton.setMaximumSize(new Dimension(150, 35));
 		
-		// Add hover effect
 		detailsButton.addMouseListener(new MouseAdapter() {
 			public void mouseEntered(MouseEvent e) {
 				detailsButton.setBackground(ACCENT_COLOR);
@@ -269,18 +262,15 @@ public class Warehouse implements ActionListener, ComponentListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public void componentResized(ComponentEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void componentMoved(ComponentEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 
@@ -299,7 +289,6 @@ public class Warehouse implements ActionListener, ComponentListener {
 
 	@Override
 	public void componentHidden(ComponentEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 

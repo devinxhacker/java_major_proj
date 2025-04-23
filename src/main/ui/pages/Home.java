@@ -40,12 +40,12 @@ public class Home implements ActionListener {
 
         JLabel welcomeText = new JLabel("Welcome to the Warehouse Management System");
         welcomeText.setFont(new Font("Segoe UI", Font.BOLD, 32));
-        welcomeText.setForeground(new Color(15, 23, 42)); // Dark slate
+        welcomeText.setForeground(new Color(15, 23, 42)); 
         welcomeText.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JLabel subText = new JLabel("Efficiently manage your warehouse inventory with our comprehensive solution");
         subText.setFont(new Font("Segoe UI", Font.PLAIN, 18));
-        subText.setForeground(new Color(71, 85, 105)); // Slate gray
+        subText.setForeground(new Color(71, 85, 105)); 
         subText.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         welcomePanel.add(welcomeText);
@@ -111,13 +111,11 @@ public class Home implements ActionListener {
 	            BorderFactory.createEmptyBorder(24, 24, 24, 24)
 	    ));
 
-	    // Title section
 	    JLabel titleLabel = new JLabel(title);
 	    titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 22));
-	    titleLabel.setForeground(new Color(15, 23, 42)); // Dark slate
+	    titleLabel.setForeground(new Color(15, 23, 42));
 	    titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-	    // Description section with fixed height
 	    String extendedDescription = switch (title) {
 	        case "Warehouse Overview" -> description + 
 	            "<br><br>Easily navigate your storage layout, check available space, and manage compartments efficiently.";
@@ -132,14 +130,12 @@ public class Home implements ActionListener {
 	    descLabel.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 	    descLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 	    
-	    // Create a fixed height panel for description to ensure consistent spacing
 	    JPanel descPanel = new JPanel();
 	    descPanel.setLayout(new BoxLayout(descPanel, BoxLayout.Y_AXIS));
 	    descPanel.setBackground(CARD_BACKGROUND);
-	    descPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 150)); // Increased height for description
+	    descPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 150)); 
 	    descPanel.add(descLabel);
 
-	    // Button section
 	    JButton button = new JButton(buttonText);
 	    button.setFont(new Font("Segoe UI", Font.BOLD, 16));
 	    button.setBackground(PRIMARY_COLOR);
@@ -149,7 +145,6 @@ public class Home implements ActionListener {
 	    button.setAlignmentX(Component.CENTER_ALIGNMENT);
 	    button.setMaximumSize(new Dimension(200, 45));
 	    
-	    // Add hover effect
 	    button.addMouseListener(new MouseAdapter() {
 	        public void mouseEntered(MouseEvent e) {
 	            button.setBackground(ACCENT_COLOR);
@@ -169,11 +164,10 @@ public class Home implements ActionListener {
 	        }
 	    });
 
-	    // Add components with adjusted spacing
 	    card.add(titleLabel);
 	    card.add(Box.createRigidArea(new Dimension(0, 15)));
 	    card.add(descPanel);
-	    card.add(Box.createRigidArea(new Dimension(0, 45))); // Increased spacing between description and button
+	    card.add(Box.createRigidArea(new Dimension(0, 45))); 
 	    card.add(button);
 
 	    return card;
