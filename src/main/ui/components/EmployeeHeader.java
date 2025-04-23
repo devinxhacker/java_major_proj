@@ -79,10 +79,10 @@ public class EmployeeHeader extends JPanel {
         GridBagConstraints rightGbc = new GridBagConstraints();
         rightGbc.gridx = 0;
         rightGbc.gridy = 0;
-        rightGbc.weightx = 0.0;
+        rightGbc.weightx = 1.0; // Changed to 1.0 to push logout to the right
         rightGbc.weighty = 1.0;
         rightGbc.anchor = GridBagConstraints.CENTER;
-        rightGbc.insets = new Insets(0, 0, 0, 25);
+        rightGbc.insets = new Insets(0, 0, 0, 0); // Removed right inset
         
         JLabel welcomeLabel = new JLabel("Welcome, " + employeeName);
         welcomeLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
@@ -125,11 +125,13 @@ public class EmployeeHeader extends JPanel {
         rightPanel.add(welcomeLabel, rightGbc);
         
         rightGbc.gridx = 1;
-        rightGbc.insets = new Insets(0, 25, 0, 25);
+        rightGbc.weightx = 0.0; // Reset weight for separator
+        rightGbc.insets = new Insets(0, 15, 0, 15); // Adjusted insets for separator
         rightPanel.add(separator, rightGbc);
         
         rightGbc.gridx = 2;
-        rightGbc.insets = new Insets(0, 0, 0, 0);
+        rightGbc.weightx = 0.0; // Reset weight for logout button
+        rightGbc.insets = new Insets(0, 0, 0, 0); // Removed insets for logout button
         rightPanel.add(logoutButton, rightGbc);
         
         navigationPanel.add(rightPanel);

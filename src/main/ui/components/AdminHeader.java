@@ -72,12 +72,12 @@ public class AdminHeader extends JPanel {
         navigationPanel.setBackground(HEADER_COLOR);
         navigationPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
         navigationPanel.setBorder(new EmptyBorder(0, 0, 0, 30));
-        navigationPanel.setPreferredSize(new Dimension(800, 70)); // Match header height
+        navigationPanel.setPreferredSize(new Dimension(800, 70)); // Further reduced width to move buttons closer to logout
         
         // Create a panel for the main navigation buttons with GridBagLayout for better alignment
         JPanel mainNavPanel = new JPanel(new GridBagLayout());
         mainNavPanel.setBackground(HEADER_COLOR);
-        mainNavPanel.setPreferredSize(new Dimension(600, 70)); // Match header height
+        mainNavPanel.setPreferredSize(new Dimension(600, 70)); // Further reduced width to move buttons closer to logout
         
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -85,7 +85,7 @@ public class AdminHeader extends JPanel {
         gbc.weightx = 0.0;
         gbc.weighty = 1.0;
         gbc.anchor = GridBagConstraints.CENTER;
-        gbc.insets = new Insets(0, 0, 0, 20);
+        gbc.insets = new Insets(0, 0, 0, 10); // Further reduced spacing between buttons
         
         // Determine current page based on frame title
         String frameTitle = currentFrame.getTitle().toLowerCase();
@@ -174,9 +174,9 @@ public class AdminHeader extends JPanel {
         
         // Add components to navigation panel
         navigationPanel.add(mainNavPanel);
-        navigationPanel.add(Box.createHorizontalStrut(25));
+        navigationPanel.add(Box.createHorizontalStrut(10)); // Further reduced spacing before separator
         navigationPanel.add(separator);
-        navigationPanel.add(Box.createHorizontalStrut(25));
+        navigationPanel.add(Box.createHorizontalStrut(10)); // Further reduced spacing after separator
         navigationPanel.add(logoutButton);
         
         this.add(navigationPanel, BorderLayout.EAST);
@@ -191,7 +191,11 @@ public class AdminHeader extends JPanel {
         button.setBorderPainted(false);
         button.setContentAreaFilled(false);
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        button.setPreferredSize(new Dimension(120, 35));
+        
+        // Adjust button width based on text
+        int width = text.equals("Send/Receive") ? 140 : 120;
+        button.setPreferredSize(new Dimension(width, 35));
+        
         button.setVerticalAlignment(SwingConstants.CENTER);
         button.setVerticalTextPosition(SwingConstants.CENTER);
         
