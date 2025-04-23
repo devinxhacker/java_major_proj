@@ -3,10 +3,16 @@ package main.ui.pages;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.border.*;
 
 import main.ui.components.AdminHeader;
 
 public class Home implements ActionListener {
+	
+	private static final Color BACKGROUND_COLOR = new Color(248, 250, 252); // Light gray-blue
+	private static final Color CARD_BACKGROUND = new Color(255, 255, 255); // White
+	private static final Color PRIMARY_COLOR = new Color(37, 99, 235); // Modern blue
+	private static final Color ACCENT_COLOR = new Color(59, 130, 246); // Light blue
 	
 	JFrame frame = new JFrame();
 	
@@ -15,29 +21,35 @@ public class Home implements ActionListener {
 		frame.setTitle("Home - Admin");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(1280, 720);
-		frame.getContentPane().setBackground(new Color(245, 247, 250));
+		frame.getContentPane().setBackground(BACKGROUND_COLOR);
 		
 		AdminHeader header = new AdminHeader(frame);
 		frame.add(header, BorderLayout.NORTH);
 
 		JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new BorderLayout());
+        centerPanel.setBackground(BACKGROUND_COLOR);
 
         JPanel welcomePanel = new JPanel();
-        welcomePanel.setBackground(new Color(180, 210, 255));
-        welcomePanel.setBorder(BorderFactory.createEmptyBorder(30, 80, 50, 80));
+        welcomePanel.setBackground(CARD_BACKGROUND);
+        welcomePanel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(226, 232, 240), 1),
+            BorderFactory.createEmptyBorder(40, 80, 50, 80)
+        ));
         welcomePanel.setLayout(new BoxLayout(welcomePanel, BoxLayout.Y_AXIS));
 
         JLabel welcomeText = new JLabel("Welcome to the Warehouse Management System");
-        welcomeText.setFont(new Font("Serif", Font.BOLD, 30));
+        welcomeText.setFont(new Font("Segoe UI", Font.BOLD, 32));
+        welcomeText.setForeground(new Color(15, 23, 42)); // Dark slate
         welcomeText.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JLabel subText = new JLabel("Efficiently manage your warehouse inventory with our comprehensive solution");
-        subText.setFont(new Font("Serif", Font.PLAIN, 20));
+        subText.setFont(new Font("Segoe UI", Font.PLAIN, 18));
+        subText.setForeground(new Color(71, 85, 105)); // Slate gray
         subText.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         welcomePanel.add(welcomeText);
-        welcomePanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        welcomePanel.add(Box.createRigidArea(new Dimension(0, 15)));
         welcomePanel.add(subText);
 
         centerPanel.add(welcomePanel, BorderLayout.NORTH);
@@ -45,6 +57,7 @@ public class Home implements ActionListener {
         
         JPanel cardsPanel = new JPanel();
         cardsPanel.setLayout(new GridLayout(1, 3, 20, 10));
+        cardsPanel.setBackground(BACKGROUND_COLOR);
         cardsPanel.setBorder(BorderFactory.createEmptyBorder(50, 40, 30, 40));
 
         cardsPanel.add(createCard("Warehouse Overview", "View all compartments and their contents at a glance", "View Warehouse"));
@@ -92,14 +105,15 @@ public class Home implements ActionListener {
 	private JPanel createCard(String title, String description, String buttonText) {
 	    JPanel card = new JPanel();
 	    card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
+	    card.setBackground(CARD_BACKGROUND);
 	    card.setBorder(BorderFactory.createCompoundBorder(
-	            BorderFactory.createLineBorder(Color.LIGHT_GRAY),
-	            BorderFactory.createEmptyBorder(10, 10, 10, 10)
+	            BorderFactory.createLineBorder(new Color(226, 232, 240), 1),
+	            BorderFactory.createEmptyBorder(24, 24, 24, 24)
 	    ));
-	    card.setBackground(Color.WHITE);
 
 	    JLabel titleLabel = new JLabel(title);
-	    titleLabel.setFont(new Font("Serif", Font.BOLD, 22));
+	    titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 22));
+	    titleLabel.setForeground(new Color(15, 23, 42)); // Dark slate
 	    titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 	    String extendedDescription = switch (title) {
@@ -112,17 +126,28 @@ public class Home implements ActionListener {
 	        default -> description;
 	    };
 
-	    JLabel descLabel = new JLabel("<html><div style='text-align: center; font-weight: plain;'>" + extendedDescription + "</div></html>");
-	    descLabel.setFont(new Font("Serif", Font.BOLD, 16));  
+	    JLabel descLabel = new JLabel("<html><div style='text-align: center; color: #475569;'>" + extendedDescription + "</div></html>");
+	    descLabel.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 	    descLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 	    JButton button = new JButton(buttonText);
-	    button.setFont(new Font("Serif", Font.BOLD, 16));
-	    button.setBackground(new Color(30, 90, 255));
+	    button.setFont(new Font("Segoe UI", Font.BOLD, 16));
+	    button.setBackground(PRIMARY_COLOR);
 	    button.setForeground(Color.WHITE);
 	    button.setFocusPainted(false);
+	    button.setBorderPainted(false);
 	    button.setAlignmentX(Component.CENTER_ALIGNMENT);
 	    button.setMaximumSize(new Dimension(200, 45));
+	    
+	    // Add hover effect
+	    button.addMouseListener(new MouseAdapter() {
+	        public void mouseEntered(MouseEvent e) {
+	            button.setBackground(ACCENT_COLOR);
+	        }
+	        public void mouseExited(MouseEvent e) {
+	            button.setBackground(PRIMARY_COLOR);
+	        }
+	    });
 
 	    button.addActionListener(e -> {
 	        frame.dispose();
@@ -135,9 +160,9 @@ public class Home implements ActionListener {
 	    });
 
 	    card.add(titleLabel);
-	    card.add(Box.createRigidArea(new Dimension(0, 10)));
-	    card.add(descLabel);
 	    card.add(Box.createRigidArea(new Dimension(0, 15)));
+	    card.add(descLabel);
+	    card.add(Box.createRigidArea(new Dimension(0, 25)));
 	    card.add(button);
 
 	    return card;

@@ -10,107 +10,214 @@ import main.ui.pages.*;
 public class AdminHeader extends JPanel {
     
 	private static final long serialVersionUID = -1093948901238630570L;
-	private static final Color HEADER_COLOR = new Color(70, 130, 180);
+	private static final Color HEADER_COLOR = new Color(30, 64, 175); // Modern dark blue
+	private static final Color HOVER_COLOR = new Color(37, 99, 235); // Lighter blue for hover
+    private static final Color ACTIVE_COLOR = new Color(59, 130, 246); // Active page indicator
+    private static final Color LOGOUT_COLOR = new Color(220, 38, 38); // Modern red for logout
+    private static final Color LOGOUT_HOVER_COLOR = new Color(248, 113, 113); // Lighter red for logout hover
+    
+    private String currentPage = "";
     
     public AdminHeader(JFrame currentFrame) {
         
         this.setBackground(HEADER_COLOR);
-        this.setPreferredSize(new Dimension(1280, 50));
+        this.setPreferredSize(new Dimension(1280, 70)); // Increased height for better spacing
         this.setLayout(new BorderLayout());
-        this.setBorder(BorderFactory.createLineBorder(Color.black));
+        this.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0)); // Remove border
         
-        JButton title = new JButton("Warehouse Management System - Admin");
+        // Create a wrapper panel for the title with proper padding and vertical centering
+        JPanel titleWrapper = new JPanel(new GridBagLayout());
+        titleWrapper.setBackground(HEADER_COLOR);
+        titleWrapper.setPreferredSize(new Dimension(400, 70)); // Match header height
+        
+        GridBagConstraints titleGbc = new GridBagConstraints();
+        titleGbc.gridx = 0;
+        titleGbc.gridy = 0;
+        titleGbc.weightx = 0.0;
+        titleGbc.weighty = 1.0;
+        titleGbc.anchor = GridBagConstraints.WEST;
+        titleGbc.insets = new Insets(0, 30, 0, 0);
+        
+        JButton title = new JButton("Warehouse Management System");
         title.setBorderPainted(false);
         title.setContentAreaFilled(false);
         title.setFocusPainted(false);
-        title.setBorder(new EmptyBorder(0, 30, 0, 0));
-        title.setFont(new Font("Serif", Font.BOLD, 20));
+        title.setFont(new Font("Segoe UI", Font.BOLD, 20));
         title.setForeground(Color.WHITE);
         title.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        title.setVerticalAlignment(SwingConstants.CENTER);
+        title.setVerticalTextPosition(SwingConstants.CENTER);
+        
+        // Add hover effect with smooth transition
+        title.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e) {
+                title.setForeground(new Color(191, 219, 254)); // Light blue on hover
+            }
+            public void mouseExited(MouseEvent e) {
+                title.setForeground(Color.WHITE);
+            }
+        });
+        
         title.addActionListener(e -> {
             Home newFrame = new Home();
             newFrame.show();
             currentFrame.dispose();
         });
-        this.add(title, BorderLayout.WEST);
         
+        titleWrapper.add(title, titleGbc);
+        this.add(titleWrapper, BorderLayout.WEST);
+        
+        // Create a navigation panel with improved layout and vertical centering
         JPanel navigationPanel = new JPanel();
         navigationPanel.setBackground(HEADER_COLOR);
-        navigationPanel.setBorder(new EmptyBorder(2, 0, 0, 30));
+        navigationPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+        navigationPanel.setBorder(new EmptyBorder(0, 0, 0, 30));
+        navigationPanel.setPreferredSize(new Dimension(800, 70)); // Further reduced width to move buttons closer to logout
         
-        JButton warehouseButton = createNavButton("Warehouse");
+        // Create a panel for the main navigation buttons with GridBagLayout for better alignment
+        JPanel mainNavPanel = new JPanel(new GridBagLayout());
+        mainNavPanel.setBackground(HEADER_COLOR);
+        mainNavPanel.setPreferredSize(new Dimension(600, 70)); // Further reduced width to move buttons closer to logout
+        
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 0.0;
+        gbc.weighty = 1.0;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.insets = new Insets(0, 0, 0, 10); // Further reduced spacing between buttons
+        
+        // Determine current page based on frame title
+        String frameTitle = currentFrame.getTitle().toLowerCase();
+        if (frameTitle.contains("warehouse")) {
+            currentPage = "warehouse";
+        } else if (frameTitle.contains("requests") || frameTitle.contains("admin portal")) {
+            currentPage = "requests";
+        } else if (frameTitle.contains("send") || frameTitle.contains("receive")) {
+            currentPage = "sendreceive";
+        } else if (frameTitle.contains("transactions")) {
+            currentPage = "transactions";
+        }
+        
+        JButton warehouseButton = createNavButton("Warehouse", "warehouse");
         warehouseButton.addActionListener(e -> {
             Warehouse newFrame = new Warehouse();
             newFrame.show();
             currentFrame.dispose();
         });
         
-        JButton requestsButton = createNavButton("Requests");
+        JButton requestsButton = createNavButton("Requests", "requests");
         requestsButton.addActionListener(e -> {
             AdminPortal newFrame = new AdminPortal();
             newFrame.show();
             currentFrame.dispose();
         });
         
-        JButton sendReceiveButton = createNavButton("Send/Receive");
+        JButton sendReceiveButton = createNavButton("Send/Receive", "sendreceive");
         sendReceiveButton.addActionListener(e -> {
-        	AdminSendReceive newFrame = new AdminSendReceive();
-        	newFrame.show();
-        	currentFrame.dispose();
+            AdminSendReceive newFrame = new AdminSendReceive();
+            newFrame.show();
+            currentFrame.dispose();
         });
         
-        JButton transactionsButton = createNavButton("Transactions");
+        JButton transactionsButton = createNavButton("Transactions", "transactions");
         transactionsButton.addActionListener(e -> {
             Transactions newFrame = new Transactions();
             newFrame.show();
             currentFrame.dispose();
         });
         
-        JButton logoutButton = createNavButton("Logout");
-        logoutButton.setBackground(new Color(220, 53, 69));
+        // Add buttons to main navigation panel with proper spacing
+        mainNavPanel.add(warehouseButton, gbc);
+        
+        gbc.gridx = 1;
+        mainNavPanel.add(requestsButton, gbc);
+        
+        gbc.gridx = 2;
+        mainNavPanel.add(sendReceiveButton, gbc);
+        
+        gbc.gridx = 3;
+        mainNavPanel.add(transactionsButton, gbc);
+        
+        // Create a separator between main nav and logout
+        JSeparator separator = new JSeparator(JSeparator.VERTICAL);
+        separator.setForeground(new Color(100, 116, 139)); // Slate gray
+        separator.setPreferredSize(new Dimension(1, 30));
+        separator.setMaximumSize(new Dimension(1, 30));
+        
+        // Create logout button with enhanced styling
+        JButton logoutButton = new JButton("Logout");
+        logoutButton.setFont(new Font("Segoe UI", Font.BOLD, 14));
         logoutButton.setForeground(Color.WHITE);
+        logoutButton.setBackground(LOGOUT_COLOR);
+        logoutButton.setFocusPainted(false);
+        logoutButton.setBorderPainted(false);
+        logoutButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        logoutButton.setPreferredSize(new Dimension(100, 35));
+        logoutButton.setVerticalAlignment(SwingConstants.CENTER);
+        
+        // Add hover effect for logout button
+        logoutButton.addMouseListener(new MouseAdapter() {
+            public void mouseEntered(MouseEvent e) {
+                logoutButton.setBackground(LOGOUT_HOVER_COLOR);
+            }
+            public void mouseExited(MouseEvent e) {
+                logoutButton.setBackground(LOGOUT_COLOR);
+            }
+        });
+        
         logoutButton.addActionListener(e -> {
             AdminLogin login = new AdminLogin();
             login.show();
             currentFrame.dispose();
         });
         
-        navigationPanel.add(warehouseButton);
-        navigationPanel.add(Box.createHorizontalStrut(15));
-        navigationPanel.add(requestsButton);
-        navigationPanel.add(Box.createHorizontalStrut(15));
-        navigationPanel.add(sendReceiveButton);
-        navigationPanel.add(Box.createHorizontalStrut(15));
-        navigationPanel.add(transactionsButton);
-        navigationPanel.add(Box.createHorizontalStrut(25));
+        // Add components to navigation panel
+        navigationPanel.add(mainNavPanel);
+        navigationPanel.add(Box.createHorizontalStrut(10)); // Further reduced spacing before separator
+        navigationPanel.add(separator);
+        navigationPanel.add(Box.createHorizontalStrut(10)); // Further reduced spacing after separator
         navigationPanel.add(logoutButton);
         
         this.add(navigationPanel, BorderLayout.EAST);
     }
     
-    private JButton createNavButton(String text) {
+    private JButton createNavButton(String text, String pageId) {
         JButton button = new JButton(text);
-        button.setFont(new Font("SansSerif", Font.BOLD, 14));
+        button.setFont(new Font("Segoe UI", Font.BOLD, 14));
         button.setForeground(Color.WHITE);
         button.setBackground(HEADER_COLOR);
-        button.setBorderPainted(false);
         button.setFocusPainted(false);
+        button.setBorderPainted(false);
+        button.setContentAreaFilled(false);
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
         
+        // Adjust button width based on text
+        int width = text.equals("Send/Receive") ? 140 : 120;
+        button.setPreferredSize(new Dimension(width, 35));
+        
+        button.setVerticalAlignment(SwingConstants.CENTER);
+        button.setVerticalTextPosition(SwingConstants.CENTER);
+        
+        // Add active state indicator
+        if (pageId.equals(currentPage)) {
+            button.setForeground(new Color(191, 219, 254)); // Light blue for active page
+            button.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(0, 0, 2, 0, ACTIVE_COLOR),
+                BorderFactory.createEmptyBorder(0, 0, 5, 0)
+            ));
+        }
+        
+        // Add hover effect with smooth transition
         button.addMouseListener(new MouseAdapter() {
-            public void mouseEntered(MouseEvent evt) {
-                if (!text.equals("Logout")) {
-                    button.setBackground(new Color(60, 116, 162));
-                } else {
-                    button.setBackground(new Color(200, 35, 51));
+            public void mouseEntered(MouseEvent e) {
+                if (!pageId.equals(currentPage)) {
+                    button.setForeground(new Color(191, 219, 254)); // Light blue on hover
                 }
             }
-            
-            public void mouseExited(MouseEvent evt) {
-                if (!text.equals("Logout")) {
-                    button.setBackground(HEADER_COLOR);
-                } else {
-                    button.setBackground(new Color(220, 53, 69));
+            public void mouseExited(MouseEvent e) {
+                if (!pageId.equals(currentPage)) {
+                    button.setForeground(Color.WHITE);
                 }
             }
         });

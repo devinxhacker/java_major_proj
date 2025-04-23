@@ -232,25 +232,40 @@ public class EmployeeRequests implements ActionListener {
                     ItemsResponse response = get();
                     if (response != null && response.success && !response.data.isEmpty()) {
                         JDialog dialog = new JDialog(frame, "Create " + requestType + " Request", true);
-                        dialog.setSize(400, 300);
+                        dialog.setSize(500, 400);
                         dialog.setLayout(new BorderLayout());
+                        dialog.getContentPane().setBackground(new Color(245, 247, 250));
                         
-                        JPanel panel = new JPanel();
-                        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-                        panel.setBorder(new EmptyBorder(20, 20, 20, 20));
+                        // Title Panel
+                        JPanel titlePanel = new JPanel(new BorderLayout());
+                        titlePanel.setBackground(new Color(245, 247, 250));
+                        titlePanel.setBorder(new EmptyBorder(20, 30, 20, 30));
                         
-                        JLabel titleLabel = new JLabel("Create " + requestType + " Request");
-                        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 18));
-                        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+                        JLabel titleLabel = new JLabel("Create " + requestType + " Request", SwingConstants.CENTER);
+                        titleLabel.setFont(new Font("Serif", Font.BOLD, 24));
+                        titleLabel.setForeground(new Color(30, 64, 175));
+                        titlePanel.add(titleLabel, BorderLayout.CENTER);
                         
+                        // Content Panel
+                        JPanel contentPanel = new JPanel();
+                        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+                        contentPanel.setBackground(new Color(245, 247, 250));
+                        contentPanel.setBorder(new EmptyBorder(0, 30, 20, 30));
+                        contentPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+                        
+                        // Item Selection Panel
                         JPanel itemPanel = new JPanel();
                         itemPanel.setLayout(new BoxLayout(itemPanel, BoxLayout.Y_AXIS));
-                        itemPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-                        itemPanel.setMaximumSize(new Dimension(350, 70));
+                        itemPanel.setBackground(new Color(245, 247, 250));
+                        itemPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+                        itemPanel.setMaximumSize(new Dimension(440, 80));
                         
-                        JLabel itemLabel = new JLabel("Select Item:");
+                        JLabel itemLabel = new JLabel("Select Item", SwingConstants.CENTER);
+                        itemLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
+                        itemLabel.setForeground(new Color(30, 64, 175));
+                        itemLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+                        
                         DefaultComboBoxModel<String> itemModel = new DefaultComboBoxModel<>();
-                        
                         int[] itemIds = new int[response.data.size()];
                         int index = 0;
                         
@@ -260,44 +275,92 @@ public class EmployeeRequests implements ActionListener {
                         }
                         
                         JComboBox<String> itemComboBox = new JComboBox<>(itemModel);
+                        itemComboBox.setFont(new Font("SansSerif", Font.PLAIN, 14));
+                        itemComboBox.setBackground(Color.WHITE);
+                        itemComboBox.setMaximumSize(new Dimension(440, 35));
+                        itemComboBox.setAlignmentX(Component.CENTER_ALIGNMENT);
                         
                         itemPanel.add(itemLabel);
-                        itemPanel.add(Box.createVerticalStrut(5));
+                        itemPanel.add(Box.createVerticalStrut(8));
                         itemPanel.add(itemComboBox);
                         
+                        // Quantity Panel
                         JPanel quantityPanel = new JPanel();
                         quantityPanel.setLayout(new BoxLayout(quantityPanel, BoxLayout.Y_AXIS));
-                        quantityPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
-                        quantityPanel.setMaximumSize(new Dimension(350, 70));
+                        quantityPanel.setBackground(new Color(245, 247, 250));
+                        quantityPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+                        quantityPanel.setMaximumSize(new Dimension(440, 80));
                         
-                        JLabel quantityLabel = new JLabel("Quantity:");
+                        JLabel quantityLabel = new JLabel("Quantity", SwingConstants.CENTER);
+                        quantityLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
+                        quantityLabel.setForeground(new Color(30, 64, 175));
+                        quantityLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+                        
                         JTextField quantityField = new JTextField();
+                        quantityField.setFont(new Font("SansSerif", Font.PLAIN, 14));
+                        quantityField.setMaximumSize(new Dimension(440, 35));
+                        quantityField.setAlignmentX(Component.CENTER_ALIGNMENT);
+                        quantityField.setHorizontalAlignment(JTextField.CENTER);
                         
                         quantityPanel.add(quantityLabel);
-                        quantityPanel.add(Box.createVerticalStrut(5));
+                        quantityPanel.add(Box.createVerticalStrut(8));
                         quantityPanel.add(quantityField);
                         
-                        JPanel buttonsPanel = new JPanel();
-                        buttonsPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+                        // Buttons Panel
+                        JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
+                        buttonsPanel.setBackground(new Color(245, 247, 250));
                         
                         JButton submitButton = new JButton("Submit");
+                        submitButton.setFont(new Font("SansSerif", Font.BOLD, 14));
+                        submitButton.setForeground(Color.WHITE);
+                        submitButton.setBackground(new Color(43, 85, 222));
+                        submitButton.setFocusPainted(false);
+                        submitButton.setBorderPainted(false);
+                        submitButton.setPreferredSize(new Dimension(120, 40));
+                        submitButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                        
                         JButton cancelButton = new JButton("Cancel");
+                        cancelButton.setFont(new Font("SansSerif", Font.BOLD, 14));
+                        cancelButton.setForeground(new Color(43, 85, 222));
+                        cancelButton.setBackground(new Color(235, 240, 255));
+                        cancelButton.setFocusPainted(false);
+                        cancelButton.setBorder(new LineBorder(new Color(43, 85, 222), 1));
+                        cancelButton.setPreferredSize(new Dimension(120, 40));
+                        cancelButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                        
+                        // Add hover effects
+                        submitButton.addMouseListener(new MouseAdapter() {
+                            public void mouseEntered(MouseEvent e) {
+                                submitButton.setBackground(new Color(37, 99, 235));
+                            }
+                            public void mouseExited(MouseEvent e) {
+                                submitButton.setBackground(new Color(43, 85, 222));
+                            }
+                        });
+                        
+                        cancelButton.addMouseListener(new MouseAdapter() {
+                            public void mouseEntered(MouseEvent e) {
+                                cancelButton.setBackground(new Color(225, 230, 245));
+                            }
+                            public void mouseExited(MouseEvent e) {
+                                cancelButton.setBackground(new Color(235, 240, 255));
+                            }
+                        });
                         
                         buttonsPanel.add(submitButton);
                         buttonsPanel.add(cancelButton);
                         
-                        panel.add(titleLabel);
-                        panel.add(Box.createVerticalStrut(20));
-                        panel.add(itemPanel);
-                        panel.add(Box.createVerticalStrut(10));
-                        panel.add(quantityPanel);
-                        panel.add(Box.createVerticalStrut(20));
-                        panel.add(buttonsPanel);
+                        // Add all panels to content panel with proper alignment
+                        contentPanel.add(Box.createVerticalStrut(20));
+                        contentPanel.add(itemPanel);
+                        contentPanel.add(Box.createVerticalStrut(20));
+                        contentPanel.add(quantityPanel);
+                        contentPanel.add(Box.createVerticalStrut(30));
+                        contentPanel.add(buttonsPanel);
                         
-                        JPanel wrapperPanel = new JPanel(new GridBagLayout());
-                        wrapperPanel.add(panel);
-                        
-                        dialog.add(wrapperPanel);
+                        // Add panels to dialog
+                        dialog.add(titlePanel, BorderLayout.NORTH);
+                        dialog.add(contentPanel, BorderLayout.CENTER);
                         
                         submitButton.addActionListener(e -> {
                             try {
