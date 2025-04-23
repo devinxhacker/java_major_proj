@@ -111,11 +111,13 @@ public class Home implements ActionListener {
 	            BorderFactory.createEmptyBorder(24, 24, 24, 24)
 	    ));
 
+	    // Title section
 	    JLabel titleLabel = new JLabel(title);
 	    titleLabel.setFont(new Font("Segoe UI", Font.BOLD, 22));
 	    titleLabel.setForeground(new Color(15, 23, 42)); // Dark slate
 	    titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+	    // Description section with fixed height
 	    String extendedDescription = switch (title) {
 	        case "Warehouse Overview" -> description + 
 	            "<br><br>Easily navigate your storage layout, check available space, and manage compartments efficiently.";
@@ -129,7 +131,15 @@ public class Home implements ActionListener {
 	    JLabel descLabel = new JLabel("<html><div style='text-align: center; color: #475569;'>" + extendedDescription + "</div></html>");
 	    descLabel.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 	    descLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+	    
+	    // Create a fixed height panel for description to ensure consistent spacing
+	    JPanel descPanel = new JPanel();
+	    descPanel.setLayout(new BoxLayout(descPanel, BoxLayout.Y_AXIS));
+	    descPanel.setBackground(CARD_BACKGROUND);
+	    descPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 150)); // Increased height for description
+	    descPanel.add(descLabel);
 
+	    // Button section
 	    JButton button = new JButton(buttonText);
 	    button.setFont(new Font("Segoe UI", Font.BOLD, 16));
 	    button.setBackground(PRIMARY_COLOR);
@@ -159,10 +169,11 @@ public class Home implements ActionListener {
 	        }
 	    });
 
+	    // Add components with adjusted spacing
 	    card.add(titleLabel);
 	    card.add(Box.createRigidArea(new Dimension(0, 15)));
-	    card.add(descLabel);
-	    card.add(Box.createRigidArea(new Dimension(0, 25)));
+	    card.add(descPanel);
+	    card.add(Box.createRigidArea(new Dimension(0, 45))); // Increased spacing between description and button
 	    card.add(button);
 
 	    return card;
