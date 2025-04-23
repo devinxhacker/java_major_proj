@@ -15,6 +15,8 @@ public class RequestsDAO {
         public Date requestDate;
         public int status;
         public String itemName;
+        public int empId;
+        public String empName;
     }
 
     public static class AcceptedRequest {
@@ -32,9 +34,10 @@ public class RequestsDAO {
         try {
             conn = DBConnectionManager.getInstance().getConnection();
 
-            String sql = "SELECT tr.request_id, tr.item_id, i.name as item_name, tr.quantity, tr.request_type, tr.request_date, tr.status " +
+            String sql = "SELECT tr.request_id, tr.item_id, i.name as item_name, tr.emp_id, e.name as emp_name, tr.quantity, tr.request_type, tr.request_date, tr.status " +
                     "FROM total_requests tr " +
                     "JOIN items i ON tr.item_id = i.item_id " +
+                    "JOIN employees e ON tr.emp_id = e.id " + 
                     "ORDER BY tr.request_date DESC";
 
             stmt = conn.prepareStatement(sql);
@@ -45,6 +48,8 @@ public class RequestsDAO {
                 r.requestId = rs.getInt("request_id");
                 r.itemId = rs.getInt("item_id");
                 r.itemName = rs.getString("item_name");
+                r.empId = rs.getInt("emp_id");
+                r.empName = rs.getString("emp_name");
                 r.quantity = rs.getInt("quantity");
                 r.requestType = rs.getString("request_type");
                 r.requestDate = rs.getTimestamp("request_date");
@@ -59,17 +64,59 @@ public class RequestsDAO {
         }
     }
     
-    public int createRequest(int itemID, int quantity, String type) throws SQLException{
+    public List<Request> getParticularEmployeeRequests(int empId) throws SQLException {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		List<Request> requests = new ArrayList<>();
+
+		try {
+			conn = DBConnectionManager.getInstance().getConnection();
+
+			String sql = "SELECT tr.request_id, tr.item_id, i.name as item_name, tr.emp_id, e.name as emp_name, tr.quantity, tr.request_type, tr.request_date, tr.status " +
+					"FROM total_requests tr " +
+					"JOIN items i ON tr.item_id = i.item_id " +
+					"JOIN employees e ON tr.emp_id = e.id " +
+					"WHERE tr.emp_id = ? " +
+					"ORDER BY tr.request_date DESC";
+
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, empId);
+			rs = stmt.executeQuery();
+
+			while (rs.next()) {
+				Request r = new Request();
+				r.requestId = rs.getInt("request_id");
+				r.itemId = rs.getInt("item_id");
+				r.itemName = rs.getString("item_name");
+				r.empId = rs.getInt("emp_id");
+				r.empName = rs.getString("emp_name");
+				r.quantity = rs.getInt("quantity");
+				r.requestType = rs.getString("request_type");
+				r.requestDate = rs.getTimestamp("request_date");
+				r.status = rs.getInt("status");
+
+				requests.add(r);
+			}
+
+			return requests;
+		} finally {
+			DBConnectionManager.getInstance().closeResources(conn, stmt, rs);
+		}
+	}
+    
+    public int createRequest(int itemID, int empID, int quantity, String type) throws SQLException{
     	Connection conn = null;
     	PreparedStatement pstmt = null;
     	ResultSet rs = null;
     	try {
     		conn = DBConnectionManager.getInstance().getConnection();
-    		String sql = "INSERT INTO total_requests(item_id, quantity, request_type) VALUES (?, ?, ?) RETURNING request_id";
+    		String sql = "INSERT INTO total_requests(item_id, emp_id, quantity, request_type) VALUES (?, ?, ?, ?) RETURNING request_id";
     		pstmt = conn.prepareStatement(sql);
     		pstmt.setInt(1, itemID);
-    		pstmt.setInt(2, quantity);
-    		pstmt.setString(3, type);
+    		pstmt.setInt(2, empID);
+    		pstmt.setInt(3, quantity);
+    		pstmt.setString(4, type);
     		
     		rs = pstmt.executeQuery();
     		

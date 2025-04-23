@@ -12,7 +12,7 @@ public class EmployeeHeader extends JPanel {
 	private static final long serialVersionUID = -9076376554250493863L;
 	private static final Color HEADER_COLOR = new Color(70, 130, 180);
     
-    public EmployeeHeader(JFrame currentFrame, String employeeName) {
+    public EmployeeHeader(JFrame currentFrame, String employeeName, int employeeId) {
         
         this.setBackground(HEADER_COLOR);
         this.setPreferredSize(new Dimension(1280, 50));
@@ -29,7 +29,7 @@ public class EmployeeHeader extends JPanel {
         title.setCursor(new Cursor(Cursor.HAND_CURSOR));
         
         title.addActionListener(e -> {
-            EmployeeRequests newFrame = new EmployeeRequests(employeeName);
+            EmployeeRequests newFrame = new EmployeeRequests(employeeName, employeeId);
             newFrame.show();
             currentFrame.dispose();
         });

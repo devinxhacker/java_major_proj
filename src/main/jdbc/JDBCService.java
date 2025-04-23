@@ -74,6 +74,7 @@ public class JDBCService {
 
     public static class CreateRequestPayload {
         public int itemId;
+        public int empId;
         public int quantity;
         public String type;
     }
@@ -123,6 +124,36 @@ public class JDBCService {
 
         return response;
     }
+    
+    public RequestResponse fetchParticularEmployeeRequests(int empId) {
+		RequestResponse response = new RequestResponse();
+
+		try {
+			List<Request> requests = requestsDAO.getParticularEmployeeRequests(empId);
+			response.data = requests;
+			response.success = true;
+		} catch (SQLException e) {
+			System.err.println("Error fetching employee requests: " + e.getMessage());
+			response.success = false;
+		}
+
+		return response;
+	}
+    
+//    public RequestResponse fetchAllAcceptedRequests() {
+//		RequestResponse response = new RequestResponse();
+//
+//		try {
+//			List<Request> requests = requestsDAO.getAllAcceptedRequests();
+//			response.data = requests;
+//			response.success = true;
+//		} catch (SQLException e) {
+//			System.err.println("Error fetching accepted requests: " + e.getMessage());
+//			response.success = false;
+//		}
+//
+//		return response;
+//	}
 
     public TransactionResponse fetchAllTransactions() {
         TransactionResponse response = new TransactionResponse();
@@ -342,7 +373,7 @@ public class JDBCService {
     public BasicResponse createRequest(CreateRequestPayload payload) {
         BasicResponse response = new BasicResponse();
         try {
-            requestsDAO.createRequest(payload.itemId, payload.quantity, payload.type.toUpperCase());
+            requestsDAO.createRequest(payload.itemId, payload.empId, payload.quantity, payload.type.toUpperCase());
             response.success = true;
             response.message = "Requested Successfully!";
         } catch (SQLException e) {

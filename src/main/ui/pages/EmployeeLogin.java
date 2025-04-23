@@ -254,7 +254,7 @@ public class EmployeeLogin implements ActionListener {
                         statusLabel.setForeground(new Color(0, 128, 0));
                         
                         Timer timer = new Timer(1000, evt -> {
-                            EmployeeRequests requests = new EmployeeRequests(response.data.name);
+                            EmployeeRequests requests = new EmployeeRequests(response.data.name, response.data.id);
                             requests.show();
                             frame.dispose();
                         });

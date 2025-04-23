@@ -27,9 +27,11 @@ public class EmployeeRequests implements ActionListener {
     private Font headerFont = new Font("Arial", Font.BOLD, 16);
     
     private String employeeName;
+    private int employeeId;
     
-    public EmployeeRequests(String name) {
+    public EmployeeRequests(String name, int empId) {
         this.employeeName = name;
+        this.employeeId = empId;
         jdbcService = new JDBCService();
         
         frame.setTitle("Employee Requests - " + employeeName);
@@ -37,7 +39,7 @@ public class EmployeeRequests implements ActionListener {
         frame.setSize(1280, 720);
         frame.getContentPane().setBackground(new Color(245, 247, 250));
         
-        EmployeeHeader header = new EmployeeHeader(frame, employeeName);
+        EmployeeHeader header = new EmployeeHeader(frame, employeeName, employeeId);
         frame.add(header, BorderLayout.NORTH);
         
         contentPanel = new JPanel(new BorderLayout());
@@ -140,7 +142,7 @@ public class EmployeeRequests implements ActionListener {
         contentPanel.add(scrollPane, BorderLayout.CENTER);
         frame.add(contentPanel, BorderLayout.CENTER);
         
-        fetchRequests();
+        fetchRequests(employeeId);
     }
     
     public void show() {
@@ -151,7 +153,7 @@ public class EmployeeRequests implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == refreshButton) {
-            fetchRequests();
+            fetchRequests(employeeId);
         } else if (e.getSource() == sendRequestButton) {
             showCreateRequestDialog("SEND");
         } else if (e.getSource() == receiveRequestButton) {
@@ -159,14 +161,14 @@ public class EmployeeRequests implements ActionListener {
         }
     }
     
-    private void fetchRequests() {
+    private void fetchRequests(int empId) {
         tableModel.setRowCount(0);
         tableModel.addRow(new Object[] { "Loading...", "", "", "", "", "" });
         
         SwingWorker<RequestResponse, Void> worker = new SwingWorker<RequestResponse, Void>() {
             @Override
             protected RequestResponse doInBackground() throws Exception {
-                return jdbcService.fetchAllRequests();
+                return jdbcService.fetchParticularEmployeeRequests(empId);
             }
             
             @Override
@@ -315,6 +317,7 @@ public class EmployeeRequests implements ActionListener {
                                     protected BasicResponse doInBackground() throws Exception {
                                         CreateRequestPayload payload = new CreateRequestPayload();
                                         payload.itemId = itemId;
+                                        payload.empId = employeeId;
                                         payload.quantity = quantity;
                                         payload.type = requestType;
                                         return jdbcService.createRequest(payload);
@@ -328,7 +331,7 @@ public class EmployeeRequests implements ActionListener {
                                             if (response.success) {
                                                 JOptionPane.showMessageDialog(dialog, "Request created successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
                                                 dialog.dispose();
-                                                fetchRequests();
+                                                fetchRequests(employeeId);
                                             } else {
                                                 JOptionPane.showMessageDialog(dialog, response.message, "Error", JOptionPane.ERROR_MESSAGE);
                                             }
@@ -363,7 +366,7 @@ public class EmployeeRequests implements ActionListener {
     }
     
     public static void main(String[] args) {
-        EmployeeRequests requests = new EmployeeRequests("Test Employee");
+        EmployeeRequests requests = new EmployeeRequests("Test Employee", 1);
         requests.show();
     }
 } 

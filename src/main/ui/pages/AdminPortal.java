@@ -60,15 +60,15 @@ public class AdminPortal implements ActionListener {
 
 		contentPanel.add(titlePanel, BorderLayout.NORTH);
 
-		String[] columnNames = { "Request ID", "Item Name", "Item ID", "Quantity", "Type", "Status", "Accept", "Deny" };
+		String[] columnNames = { "Request ID", "Employee ID", "Employee Name", "Item Name", "Item ID", "Quantity", "Type", "Status", "Accept", "Deny" };
 		tableModel = new DefaultTableModel(columnNames, 0) {
 			private static final long serialVersionUID = -4361985463101194634L;
 
 			@Override
 			public Class<?> getColumnClass(int columnIndex) {
-				if (columnIndex == 6 || columnIndex == 7) {
+				if (columnIndex == 8 || columnIndex == 9) {
 					return JPanel.class;
-				} else if (columnIndex == 5) {
+				} else if (columnIndex == 7) {
 					return String.class;
 				}
 				return Object.class;
@@ -76,7 +76,7 @@ public class AdminPortal implements ActionListener {
 
 			@Override
 			public boolean isCellEditable(int row, int column) {
-				return column == 6 || column == 7;
+				return column == 8 || column == 9;
 			}
 		};
 		requestTable = new JTable(tableModel);
@@ -87,14 +87,16 @@ public class AdminPortal implements ActionListener {
 		requestTable.setDefaultRenderer(String.class, new StatusRenderer());
 		requestTable.getTableHeader().setFont(headerFont);
 		requestTable.setFont(tableFont);
-		requestTable.getColumnModel().getColumn(0).setPreferredWidth(80);
-		requestTable.getColumnModel().getColumn(1).setPreferredWidth(150);
-		requestTable.getColumnModel().getColumn(2).setPreferredWidth(80);
+		requestTable.getColumnModel().getColumn(0).setPreferredWidth(70);
+		requestTable.getColumnModel().getColumn(1).setPreferredWidth(70);
+		requestTable.getColumnModel().getColumn(2).setPreferredWidth(100);
 		requestTable.getColumnModel().getColumn(3).setPreferredWidth(80);
 		requestTable.getColumnModel().getColumn(4).setPreferredWidth(80);
-		requestTable.getColumnModel().getColumn(5).setPreferredWidth(100);
+		requestTable.getColumnModel().getColumn(5).setPreferredWidth(80);
 		requestTable.getColumnModel().getColumn(6).setPreferredWidth(80);
 		requestTable.getColumnModel().getColumn(7).setPreferredWidth(80);
+		requestTable.getColumnModel().getColumn(8).setPreferredWidth(70);
+		requestTable.getColumnModel().getColumn(9).setPreferredWidth(70);
 		requestTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
 			private static final long serialVersionUID = -3755257743204870932L;
 
@@ -157,13 +159,13 @@ public class AdminPortal implements ActionListener {
 					if (response != null && response.success) {
 						displayRequests(response.data);
 					} else {
-						tableModel.addRow(new Object[] { "", "", "", "", "",
+						tableModel.addRow(new Object[] { "", "", "", "", "", "", "",
 								"Failed to load requests. Please try again.", "", "" });
 					}
 				} catch (Exception e) {
 					System.err.println("Error fetching requests: " + e.getMessage());
 					tableModel.addRow(
-							new Object[] { "", "", "", "", "", "Error loading requests. Please try again.", "", "" });
+							new Object[] { "", "", "", "", "", "", "", "Error loading requests. Please try again.", "", "" });
 				}
 			}
 		};
@@ -175,7 +177,7 @@ public class AdminPortal implements ActionListener {
 		tableModel.setRowCount(0);
 
 		if (requests == null || requests.isEmpty()) {
-			tableModel.addRow(new Object[] { "", "", "", "", "", "No requests found.", "", "" });
+			tableModel.addRow(new Object[] { "", "", "", "", "", "", "", "No requests found.", "", "" });
 		} else {
 			for (Request r : requests) {
 				JRadioButton acceptRadio = new JRadioButton();
@@ -304,7 +306,7 @@ public class AdminPortal implements ActionListener {
 						}
 					}
 				});
-				tableModel.addRow(new Object[] { r.requestId, r.itemName, r.itemId, r.quantity, r.requestType,
+				tableModel.addRow(new Object[] { r.requestId, r.empId, r.empName, r.itemName, r.itemId, r.quantity, r.requestType,
 						statusText, acceptPanel, denyPanel });
 			}
 		}
