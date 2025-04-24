@@ -23,7 +23,7 @@ public class Transactions implements ActionListener {
 
 	public Transactions() {
 		jdbcService = new JDBCService();
-		
+
 		frame.setTitle("Transactions History - Admin");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(1280, 720);
@@ -35,11 +35,22 @@ public class Transactions implements ActionListener {
 		contentPanel = new JPanel(new BorderLayout());
 		contentPanel.setBackground(new Color(245, 247, 250));
 
-		JPanel titlePanel = new JPanel(new BorderLayout(10, 10));
-		titlePanel.setBorder(new EmptyBorder(20, 40, 20, 40));
+		JPanel headerContainer = new JPanel();
+		headerContainer.setLayout(new BoxLayout(headerContainer, BoxLayout.Y_AXIS));
+		headerContainer.setBackground(new Color(245, 247, 250));
+		headerContainer.setBorder(new EmptyBorder(20, 40, 0, 40));
+
+		JPanel titleCardContainer = new JPanel();
+		titleCardContainer.setLayout(new BorderLayout());
+		titleCardContainer.setBackground(new Color(245, 247, 250));
+		titleCardContainer.setBorder(new EmptyBorder(10, 20, 10, 20));
+		titleCardContainer.setMaximumSize(new Dimension(1000, 80));
+		titleCardContainer.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+		JPanel titlePanel = new JPanel(new BorderLayout(10, 0));
 		titlePanel.setBackground(new Color(245, 247, 250));
 
-		JLabel title = new JLabel("Transaction History", SwingConstants.CENTER);
+		JLabel title = new JLabel("Transaction History");
 		title.setFont(new Font("Serif", Font.BOLD, 28));
 
 		refreshButton = new JButton("🔄 Refresh Data");
@@ -51,12 +62,15 @@ public class Transactions implements ActionListener {
 		refreshButton.setPreferredSize(new Dimension(160, 40));
 		refreshButton.addActionListener(this);
 
-		titlePanel.add(Box.createHorizontalStrut(160), BorderLayout.WEST);
-		titlePanel.add(title, BorderLayout.CENTER);
+		titlePanel.add(title, BorderLayout.WEST);
 		titlePanel.add(refreshButton, BorderLayout.EAST);
 
+		titleCardContainer.add(titlePanel, BorderLayout.CENTER);
 
-		contentPanel.add(titlePanel, BorderLayout.NORTH);
+		headerContainer.add(titleCardContainer);
+		headerContainer.add(Box.createVerticalStrut(10));
+
+		contentPanel.add(headerContainer, BorderLayout.NORTH);
 
 		transactionList = new JPanel();
 		transactionList.setLayout(new BoxLayout(transactionList, BoxLayout.Y_AXIS));
@@ -75,7 +89,7 @@ public class Transactions implements ActionListener {
 
 		contentPanel.add(scrollPane, BorderLayout.CENTER);
 		frame.add(contentPanel, BorderLayout.CENTER);
-		
+
 		fetchTransactions();
 	}
 
@@ -95,7 +109,7 @@ public class Transactions implements ActionListener {
 			fetchTransactions();
 		}
 	}
-	
+
 	private void fetchTransactions() {
 
 		transactionList.removeAll();
@@ -105,13 +119,13 @@ public class Transactions implements ActionListener {
 		transactionList.add(loadingLabel);
 		transactionList.revalidate();
 		transactionList.repaint();
-		
+
 		SwingWorker<TransactionResponse, Void> worker = new SwingWorker<TransactionResponse, Void>() {
 			@Override
 			protected TransactionResponse doInBackground() throws Exception {
 				return jdbcService.fetchAllTransactions();
 			}
-			
+
 			@Override
 			protected void done() {
 				try {
@@ -141,20 +155,20 @@ public class Transactions implements ActionListener {
 				}
 			}
 		};
-		
+
 		worker.execute();
 	}
-	
+
 	private void displayTransactions(List<Transaction> transactions) {
 		transactionList.removeAll();
-		
+
 		if (transactions == null || transactions.isEmpty()) {
 			JLabel noDataLabel = new JLabel("No transactions found.");
 			noDataLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
 			noDataLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 			transactionList.add(noDataLabel);
 		} else {
-			
+
 			for (Transaction t : transactions) {
 				JPanel card = new JPanel();
 				card.setLayout(new BorderLayout());
@@ -163,28 +177,49 @@ public class Transactions implements ActionListener {
 				card.setBackground(t.type.equals("RECEIVE") ? new Color(235, 255, 235) : new Color(255, 235, 235));
 				card.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-				JLabel typeLabel = new JLabel(t.type);
+				String typeText = t.type.equals("RECEIVE") ? " 📥 RECEIVE" : " 📤 SEND";
+				JLabel typeLabel = new JLabel(typeText);
 				typeLabel.setFont(new Font("SansSerif", Font.BOLD, 18));
 				typeLabel.setForeground(t.type.equals("RECEIVE") ? new Color(0, 128, 0) : new Color(200, 0, 0));
+
+				JLabel dateLabel = new JLabel();
+				if (t.date != null) {
+					java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("MMM dd, yyyy • HH:mm");
+					dateLabel.setText("📅 " + sdf.format(t.date));
+				} else {
+					dateLabel.setText("📅 Date not available");
+				}
+				dateLabel.setFont(new Font("SansSerif", Font.BOLD, 14));
+				dateLabel.setForeground(new Color(60, 60, 100));
+				dateLabel.setBorder(BorderFactory.createCompoundBorder(
+					BorderFactory.createLineBorder(new Color(200, 200, 220), 1, true),
+					BorderFactory.createEmptyBorder(4, 8, 4, 8)
+				));
+				dateLabel.setBackground(new Color(240, 240, 250));
+				dateLabel.setOpaque(true);
 
 				JPanel top = new JPanel(new BorderLayout());
 				top.setOpaque(false);
 				top.add(typeLabel, BorderLayout.WEST);
+				top.add(dateLabel, BorderLayout.EAST);
 
 				JLabel item = new JLabel("Item: " + t.itemName);
 				JLabel id = new JLabel("Item ID: " + t.itemId);
 				JLabel qty = new JLabel("Quantity: " + t.quantity);
+				JLabel category = new JLabel("Category: " + t.categoryName);
 
 				Font infoFont = new Font("SansSerif", Font.PLAIN, 16);
 				item.setFont(infoFont);
 				id.setFont(infoFont);
 				qty.setFont(infoFont);
+				category.setFont(infoFont);
 
-				JPanel details = new JPanel(new FlowLayout(FlowLayout.LEFT, 40, 10));
+				JPanel details = new JPanel(new FlowLayout(FlowLayout.LEFT, 30, 10));
 				details.setOpaque(false);
 				details.add(item);
-				details.add(id);
+				details.add(category);
 				details.add(qty);
+				details.add(id);
 
 				card.add(top, BorderLayout.NORTH);
 				card.add(details, BorderLayout.CENTER);
@@ -193,7 +228,7 @@ public class Transactions implements ActionListener {
 				transactionList.add(Box.createVerticalStrut(15));
 			}
 		}
-		
+
 		transactionList.revalidate();
 		transactionList.repaint();
 	}
