@@ -38,19 +38,16 @@ public class Warehouse implements ActionListener, ComponentListener {
 		frame.add(header, BorderLayout.NORTH);
 		
 		JPanel content = new JPanel();
-		content.setLayout(new BorderLayout());
+		content.setLayout(new BorderLayout(0, 0));
 		content.setBackground(BACKGROUND_COLOR);
-		
-		JPanel wrapperPanel = new JPanel();
-		wrapperPanel.setBackground(BACKGROUND_COLOR);
+		content.setBorder(BorderFactory.createEmptyBorder(15, 100, 15, 100));
 		
 		JPanel topPanel = new JPanel();
 		topPanel.setLayout(new BorderLayout());
-		topPanel.setPreferredSize(new Dimension(1080, 60));
 		topPanel.setBackground(CARD_BACKGROUND);
 		topPanel.setBorder(BorderFactory.createCompoundBorder(
 			BorderFactory.createLineBorder(new Color(226, 232, 240), 1),
-			BorderFactory.createEmptyBorder(10, 20, 10, 20)
+			BorderFactory.createEmptyBorder(8, 20, 8, 20)
 		));
 		
 		JLabel panelTitle = new JLabel("Warehouse Compartments");
@@ -60,7 +57,7 @@ public class Warehouse implements ActionListener, ComponentListener {
 		topPanel.add(panelTitle, BorderLayout.WEST);
 		
 		JPanel buttonWrapper = new JPanel();
-		buttonWrapper.setBorder(new EmptyBorder(10, 0, 0, 40));
+		buttonWrapper.setBorder(new EmptyBorder(0, 0, 0, 40));
 		buttonWrapper.setBackground(CARD_BACKGROUND);
 		
 		JButton refreshButton = new JButton("Refresh");
@@ -91,22 +88,15 @@ public class Warehouse implements ActionListener, ComponentListener {
 		buttonWrapper.add(refreshButton);
 		topPanel.add(buttonWrapper, BorderLayout.EAST);
 		
-		wrapperPanel.add(topPanel);
-		content.add(wrapperPanel, BorderLayout.NORTH);
-		
-		JPanel wrapperCompartment = new JPanel();
-		wrapperCompartment.setBackground(BACKGROUND_COLOR);
+		content.add(topPanel, BorderLayout.NORTH);
 		
 		compartments.setLayout(new GridLayout(0, 3, 20, 20));
-		compartments.setPreferredSize(new Dimension(1080, 600));
 		compartments.setBackground(BACKGROUND_COLOR);
-		compartments.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-	
-		wrapperCompartment.add(compartments);
-		content.add(wrapperCompartment, BorderLayout.SOUTH);
+		compartments.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
+		
+		content.add(compartments, BorderLayout.CENTER);
 		
 		frame.add(content, BorderLayout.CENTER);
-		
 		frame.addComponentListener(this);
 	}
 	
@@ -116,13 +106,11 @@ public class Warehouse implements ActionListener, ComponentListener {
 		card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
 		card.setBorder(BorderFactory.createCompoundBorder(
 			BorderFactory.createLineBorder(new Color(226, 232, 240), 1),
-			BorderFactory.createEmptyBorder(20, 20, 20, 20)
+			BorderFactory.createEmptyBorder(12, 15, 12, 15)
 		));
 		
-		card.setMinimumSize(new Dimension(300, 350));
-		card.setPreferredSize(new Dimension(300, 350));
-		
-		card.add(Box.createVerticalStrut(10));
+		card.setMinimumSize(new Dimension(300, 260));
+		card.setPreferredSize(new Dimension(300, 260));
 		
 		JLabel compartmentNameLabel = new JLabel(compartmentName);
 		compartmentNameLabel.setFont(new Font("Segoe UI", Font.BOLD, 20));
@@ -130,15 +118,7 @@ public class Warehouse implements ActionListener, ComponentListener {
 		compartmentNameLabel.setAlignmentX(Container.CENTER_ALIGNMENT);
 		card.add(compartmentNameLabel);
 		
-		card.add(Box.createVerticalStrut(20));
-		
-		JLabel totalCapacityLabel = new JLabel("Total Capacity: " + totalCapacity);
-		totalCapacityLabel.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-		totalCapacityLabel.setForeground(new Color(71, 85, 105)); 
-		totalCapacityLabel.setAlignmentX(Container.CENTER_ALIGNMENT);
-		card.add(totalCapacityLabel);
-		
-		card.add(Box.createVerticalStrut(15));
+		card.add(Box.createVerticalStrut(8));
 		
 		JLabel spaceUsedLabel = new JLabel("Space Used: " + spaceUsed);
 		spaceUsedLabel.setFont(new Font("Segoe UI", Font.PLAIN, 16));
@@ -146,32 +126,40 @@ public class Warehouse implements ActionListener, ComponentListener {
 		spaceUsedLabel.setAlignmentX(Container.CENTER_ALIGNMENT);
 		card.add(spaceUsedLabel);
 		
-		card.add(Box.createVerticalStrut(15));
+		card.add(Box.createVerticalStrut(8));
 		
 		JLabel spaceAvailableLabel = new JLabel("Available Space: " + (totalCapacity - spaceUsed));
 		spaceAvailableLabel.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 		spaceAvailableLabel.setForeground(new Color(71, 85, 105)); 
 		spaceAvailableLabel.setAlignmentX(Container.CENTER_ALIGNMENT);
 		card.add(spaceAvailableLabel);
+
+        card.add(Box.createVerticalStrut(8));
 		
-		card.add(Box.createVerticalStrut(20));
+		JLabel totalCapacityLabel = new JLabel("Total Capacity: " + totalCapacity);
+		totalCapacityLabel.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		totalCapacityLabel.setForeground(new Color(71, 85, 105)); 
+		totalCapacityLabel.setAlignmentX(Container.CENTER_ALIGNMENT);
+		card.add(totalCapacityLabel);
+		
+		card.add(Box.createVerticalStrut(12));
 		
 		JProgressBar spaceBar = new JProgressBar(0, totalCapacity);
 		spaceBar.setValue(spaceUsed);
 		spaceBar.setStringPainted(true);
 		spaceBar.setForeground(spaceUsed > totalCapacity * 0.8 ? WARNING_COLOR : SUCCESS_COLOR);
 		spaceBar.setBackground(new Color(226, 232, 240)); 
-		spaceBar.setMaximumSize(new Dimension(200, 20));
+		spaceBar.setMaximumSize(new Dimension(220, 25));
 		spaceBar.setAlignmentX(Container.CENTER_ALIGNMENT);
 		card.add(spaceBar);
 		
-		card.add(Box.createVerticalGlue());
+		card.add(Box.createVerticalStrut(12));
 		
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
 		buttonPanel.setBackground(CARD_BACKGROUND);
 		buttonPanel.setAlignmentX(Container.CENTER_ALIGNMENT);
-		buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+		buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		
 		JButton detailsButton = new JButton("View details");
 		detailsButton.setFont(new Font("Segoe UI", Font.BOLD, 14));
@@ -180,8 +168,8 @@ public class Warehouse implements ActionListener, ComponentListener {
 		detailsButton.setFocusPainted(false);
 		detailsButton.setBorderPainted(false);
 		detailsButton.setAlignmentX(Container.CENTER_ALIGNMENT);
-		detailsButton.setPreferredSize(new Dimension(150, 35));
-		detailsButton.setMaximumSize(new Dimension(150, 35));
+		detailsButton.setPreferredSize(new Dimension(150, 30));
+		detailsButton.setMaximumSize(new Dimension(150, 30));
 		
 		detailsButton.addMouseListener(new MouseAdapter() {
 			public void mouseEntered(MouseEvent e) {
@@ -276,7 +264,6 @@ public class Warehouse implements ActionListener, ComponentListener {
 
 	@Override
 	public void componentShown(ComponentEvent e) {
-
 		compartments.removeAll();
         for (int i = 0; i < 5; i++) {
              compartments.add(createCompartment("Fetching...", 0, 0, null));
@@ -291,5 +278,4 @@ public class Warehouse implements ActionListener, ComponentListener {
 	public void componentHidden(ComponentEvent e) {
 		
 	}
-
 }
