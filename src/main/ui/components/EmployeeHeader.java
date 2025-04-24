@@ -17,14 +17,14 @@ public class EmployeeHeader extends JPanel {
     public EmployeeHeader(JFrame currentFrame, String employeeName, int employeeId) {
         
         this.setBackground(HEADER_COLOR);
-        this.setPreferredSize(new Dimension(1280, 70)); // Match AdminHeader height
+        this.setPreferredSize(new Dimension(1280, 70)); 
         this.setLayout(new BorderLayout());
-        this.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0)); // Remove border
+        this.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0)); 
         
-        // Create a wrapper panel for the title with proper padding and vertical centering
+        
         JPanel titleWrapper = new JPanel(new GridBagLayout());
         titleWrapper.setBackground(HEADER_COLOR);
-        titleWrapper.setPreferredSize(new Dimension(400, 70)); // Match header height
+        titleWrapper.setPreferredSize(new Dimension(400, 70)); 
         
         GridBagConstraints titleGbc = new GridBagConstraints();
         titleGbc.gridx = 0;
@@ -44,7 +44,7 @@ public class EmployeeHeader extends JPanel {
         title.setVerticalAlignment(SwingConstants.CENTER);
         title.setVerticalTextPosition(SwingConstants.CENTER);
         
-        // Add hover effect with smooth transition
+        
         title.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent e) {
                 title.setForeground(new Color(191, 219, 254)); // Light blue on hover
@@ -63,37 +63,37 @@ public class EmployeeHeader extends JPanel {
         titleWrapper.add(title, titleGbc);
         this.add(titleWrapper, BorderLayout.WEST);
         
-        // Create a navigation panel with improved layout and vertical centering
+        
         JPanel navigationPanel = new JPanel();
         navigationPanel.setBackground(HEADER_COLOR);
         navigationPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
         navigationPanel.setBorder(new EmptyBorder(0, 0, 0, 30));
-        navigationPanel.setPreferredSize(new Dimension(500, 70)); // Increased width to accommodate welcome text
+        navigationPanel.setPreferredSize(new Dimension(500, 70)); 
         
-        // Create a panel for the welcome label and logout button
+        
         JPanel rightPanel = new JPanel(new GridBagLayout());
         rightPanel.setBackground(HEADER_COLOR);
-        rightPanel.setPreferredSize(new Dimension(500, 70)); // Increased width to accommodate welcome text
+        rightPanel.setPreferredSize(new Dimension(500, 70)); 
         
         GridBagConstraints rightGbc = new GridBagConstraints();
         rightGbc.gridx = 0;
         rightGbc.gridy = 0;
-        rightGbc.weightx = 1.0; // Changed to 1.0 to push logout to the right
+        rightGbc.weightx = 1.0; 
         rightGbc.weighty = 1.0;
         rightGbc.anchor = GridBagConstraints.CENTER;
-        rightGbc.insets = new Insets(0, 0, 0, 0); // Removed right inset
+        rightGbc.insets = new Insets(0, 0, 0, 0); 
         
         JLabel welcomeLabel = new JLabel("Welcome, " + employeeName);
         welcomeLabel.setFont(new Font("Segoe UI", Font.BOLD, 16));
         welcomeLabel.setForeground(Color.WHITE);
         
-        // Create a separator between welcome label and logout
+        
         JSeparator separator = new JSeparator(JSeparator.VERTICAL);
         separator.setForeground(new Color(100, 116, 139)); // Slate gray
         separator.setPreferredSize(new Dimension(1, 30));
         separator.setMaximumSize(new Dimension(1, 30));
         
-        // Create logout button with enhanced styling
+        
         JButton logoutButton = new JButton("Logout");
         logoutButton.setFont(new Font("Segoe UI", Font.BOLD, 14));
         logoutButton.setForeground(Color.WHITE);
@@ -104,7 +104,7 @@ public class EmployeeHeader extends JPanel {
         logoutButton.setPreferredSize(new Dimension(100, 35));
         logoutButton.setVerticalAlignment(SwingConstants.CENTER);
         
-        // Add hover effect for logout button
+        
         logoutButton.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent e) {
                 logoutButton.setBackground(LOGOUT_HOVER_COLOR);
@@ -120,17 +120,17 @@ public class EmployeeHeader extends JPanel {
             currentFrame.dispose();
         });
         
-        // Add components to right panel
+        
         rightPanel.add(welcomeLabel, rightGbc);
         
         rightGbc.gridx = 1;
-        rightGbc.weightx = 0.0; // Reset weight for separator
-        rightGbc.insets = new Insets(0, 15, 0, 15); // Adjusted insets for separator
+        rightGbc.weightx = 0.0; 
+        rightGbc.insets = new Insets(0, 15, 0, 15); 
         rightPanel.add(separator, rightGbc);
         
         rightGbc.gridx = 2;
-        rightGbc.weightx = 0.0; // Reset weight for logout button
-        rightGbc.insets = new Insets(0, 0, 0, 0); // Removed insets for logout button
+        rightGbc.weightx = 0.0; 
+        rightGbc.insets = new Insets(0, 0, 0, 0); 
         rightPanel.add(logoutButton, rightGbc);
         
         navigationPanel.add(rightPanel);

@@ -20,14 +20,14 @@ public class AdminHeader extends JPanel {
     public AdminHeader(JFrame currentFrame) {
         
         this.setBackground(HEADER_COLOR);
-        this.setPreferredSize(new Dimension(1280, 70)); // Increased height for better spacing
+        this.setPreferredSize(new Dimension(1280, 70));
         this.setLayout(new BorderLayout());
-        this.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0)); // Remove border
+        this.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0)); 
         
-        // Create a wrapper panel for the title with proper padding and vertical centering
+        
         JPanel titleWrapper = new JPanel(new GridBagLayout());
         titleWrapper.setBackground(HEADER_COLOR);
-        titleWrapper.setPreferredSize(new Dimension(400, 70)); // Match header height
+        titleWrapper.setPreferredSize(new Dimension(400, 70)); 
         
         GridBagConstraints titleGbc = new GridBagConstraints();
         titleGbc.gridx = 0;
@@ -47,7 +47,7 @@ public class AdminHeader extends JPanel {
         title.setVerticalAlignment(SwingConstants.CENTER);
         title.setVerticalTextPosition(SwingConstants.CENTER);
         
-        // Add hover effect with smooth transition
+        
         title.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent e) {
                 title.setForeground(new Color(191, 219, 254)); // Light blue on hover
@@ -66,17 +66,17 @@ public class AdminHeader extends JPanel {
         titleWrapper.add(title, titleGbc);
         this.add(titleWrapper, BorderLayout.WEST);
         
-        // Create a navigation panel with improved layout and vertical centering
+        
         JPanel navigationPanel = new JPanel();
         navigationPanel.setBackground(HEADER_COLOR);
         navigationPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
         navigationPanel.setBorder(new EmptyBorder(0, 0, 0, 30));
-        navigationPanel.setPreferredSize(new Dimension(800, 70)); // Further reduced width to move buttons closer to logout
+        navigationPanel.setPreferredSize(new Dimension(800, 70)); 
         
-        // Create a panel for the main navigation buttons with GridBagLayout for better alignment
+        
         JPanel mainNavPanel = new JPanel(new GridBagLayout());
         mainNavPanel.setBackground(HEADER_COLOR);
-        mainNavPanel.setPreferredSize(new Dimension(600, 70)); // Further reduced width to move buttons closer to logout
+        mainNavPanel.setPreferredSize(new Dimension(600, 70)); 
         
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -84,9 +84,9 @@ public class AdminHeader extends JPanel {
         gbc.weightx = 0.0;
         gbc.weighty = 1.0;
         gbc.anchor = GridBagConstraints.CENTER;
-        gbc.insets = new Insets(0, 0, 0, 10); // Further reduced spacing between buttons
+        gbc.insets = new Insets(0, 0, 0, 10); 
         
-        // Determine current page based on frame title
+        
         String frameTitle = currentFrame.getTitle().toLowerCase();
         if (frameTitle.contains("warehouse")) {
             currentPage = "warehouse";
@@ -126,7 +126,7 @@ public class AdminHeader extends JPanel {
             currentFrame.dispose();
         });
         
-        // Add buttons to main navigation panel with proper spacing
+        
         mainNavPanel.add(warehouseButton, gbc);
         
         gbc.gridx = 1;
@@ -138,13 +138,13 @@ public class AdminHeader extends JPanel {
         gbc.gridx = 3;
         mainNavPanel.add(transactionsButton, gbc);
         
-        // Create a separator between main nav and logout
+        
         JSeparator separator = new JSeparator(JSeparator.VERTICAL);
         separator.setForeground(new Color(100, 116, 139)); // Slate gray
         separator.setPreferredSize(new Dimension(1, 30));
         separator.setMaximumSize(new Dimension(1, 30));
         
-        // Create logout button with enhanced styling
+        
         JButton logoutButton = new JButton("Logout");
         logoutButton.setFont(new Font("Segoe UI", Font.BOLD, 14));
         logoutButton.setForeground(Color.WHITE);
@@ -155,7 +155,7 @@ public class AdminHeader extends JPanel {
         logoutButton.setPreferredSize(new Dimension(100, 35));
         logoutButton.setVerticalAlignment(SwingConstants.CENTER);
         
-        // Add hover effect for logout button
+        
         logoutButton.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent e) {
                 logoutButton.setBackground(LOGOUT_HOVER_COLOR);
@@ -171,11 +171,11 @@ public class AdminHeader extends JPanel {
             currentFrame.dispose();
         });
         
-        // Add components to navigation panel
+        
         navigationPanel.add(mainNavPanel);
-        navigationPanel.add(Box.createHorizontalStrut(10)); // Further reduced spacing before separator
+        navigationPanel.add(Box.createHorizontalStrut(10)); 
         navigationPanel.add(separator);
-        navigationPanel.add(Box.createHorizontalStrut(10)); // Further reduced spacing after separator
+        navigationPanel.add(Box.createHorizontalStrut(10)); 
         navigationPanel.add(logoutButton);
         
         this.add(navigationPanel, BorderLayout.EAST);
@@ -191,14 +191,14 @@ public class AdminHeader extends JPanel {
         button.setContentAreaFilled(false);
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
         
-        // Adjust button width based on text
+        
         int width = text.equals("Send/Receive") ? 140 : 120;
         button.setPreferredSize(new Dimension(width, 35));
         
         button.setVerticalAlignment(SwingConstants.CENTER);
         button.setVerticalTextPosition(SwingConstants.CENTER);
         
-        // Add active state indicator
+        
         if (pageId.equals(currentPage)) {
             button.setForeground(new Color(191, 219, 254)); // Light blue for active page
             button.setBorder(BorderFactory.createCompoundBorder(
@@ -207,7 +207,7 @@ public class AdminHeader extends JPanel {
             ));
         }
         
-        // Add hover effect with smooth transition
+        
         button.addMouseListener(new MouseAdapter() {
             public void mouseEntered(MouseEvent e) {
                 if (!pageId.equals(currentPage)) {
