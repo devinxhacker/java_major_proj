@@ -129,7 +129,7 @@ public class AdminSendReceive implements ActionListener {
 						comboBox.addItem("Select an item...");
 						for (Item item : response.data) {
 							itemsList.add(item);
-							comboBox.addItem(item.name);
+							comboBox.addItem(item.name + " - " + item.categoryName);
 						}
 						comboBox.setEnabled(true);
 					} else {
@@ -167,15 +167,29 @@ public class AdminSendReceive implements ActionListener {
 			btnReceiveItems.setText("Receiving...");
 		}
 
-		String selectedItemName = (String) comboBox.getSelectedItem();
-		if (selectedItemName == null || selectedItemName.equals("Select an item...")) {
+		String selectedItemText = (String) comboBox.getSelectedItem();
+		if (selectedItemText == null || selectedItemText.equals("Select an item...")) {
 			JOptionPane.showMessageDialog(frame, "Please select an item.", "Error", JOptionPane.ERROR_MESSAGE);
+			btnSendItems.setEnabled(true);
+			btnReceiveItems.setEnabled(true);
+			if (type.equals("send")) {
+				btnSendItems.setText("Send Items");
+			} else {
+				btnReceiveItems.setText("Receive Items");
+			}
 			return;
 		}
 
 		String quantityText = textField.getText();
 		if (quantityText.isEmpty()) {
 			JOptionPane.showMessageDialog(frame, "Please enter a quantity.", "Error", JOptionPane.ERROR_MESSAGE);
+			btnSendItems.setEnabled(true);
+			btnReceiveItems.setEnabled(true);
+			if (type.equals("send")) {
+				btnSendItems.setText("Send Items");
+			} else {
+				btnReceiveItems.setText("Receive Items");
+			}
 			return;
 		}
 
@@ -184,12 +198,20 @@ public class AdminSendReceive implements ActionListener {
 			if (quantity <= 0) {
 				JOptionPane.showMessageDialog(frame, "Quantity must be greater than zero.", "Error",
 						JOptionPane.ERROR_MESSAGE);
+				btnSendItems.setEnabled(true);
+				btnReceiveItems.setEnabled(true);
+				if (type.equals("send")) {
+					btnSendItems.setText("Send Items");
+				} else {
+					btnReceiveItems.setText("Receive Items");
+				}
 				return;
 			}
 
 			Item selectedItem = null;
 			for (Item item : itemsList) {
-				if (item.name.equals(selectedItemName)) {
+				String itemDisplayText = item.name + " - " + item.categoryName;
+				if (itemDisplayText.equals(selectedItemText)) {
 					selectedItem = item;
 					break;
 				}
@@ -197,6 +219,13 @@ public class AdminSendReceive implements ActionListener {
 
 			if (selectedItem == null) {
 				JOptionPane.showMessageDialog(frame, "Selected item not found.", "Error", JOptionPane.ERROR_MESSAGE);
+				btnSendItems.setEnabled(true);
+				btnReceiveItems.setEnabled(true);
+				if (type.equals("send")) {
+					btnSendItems.setText("Send Items");
+				} else {
+					btnReceiveItems.setText("Receive Items");
+				}
 				return;
 			}
 
