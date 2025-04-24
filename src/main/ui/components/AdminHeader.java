@@ -11,8 +11,7 @@ public class AdminHeader extends JPanel {
     
 	private static final long serialVersionUID = -1093948901238630570L;
 	private static final Color HEADER_COLOR = new Color(30, 64, 175); // Modern dark blue
-	private static final Color HOVER_COLOR = new Color(37, 99, 235); // Lighter blue for hover
-    private static final Color ACTIVE_COLOR = new Color(59, 130, 246); // Active page indicator
+	private static final Color ACTIVE_COLOR = new Color(59, 130, 246); // Active page indicator
     private static final Color LOGOUT_COLOR = new Color(220, 38, 38); // Modern red for logout
     private static final Color LOGOUT_HOVER_COLOR = new Color(248, 113, 113); // Lighter red for logout hover
     

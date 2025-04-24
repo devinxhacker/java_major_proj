@@ -3,8 +3,6 @@ package main.ui.pages;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import javax.swing.border.*;
-
 import main.ui.components.AdminHeader;
 
 public class Home implements ActionListener {
