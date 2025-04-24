@@ -20,6 +20,8 @@ public class AdminSendReceive implements ActionListener {
 	private JComboBox<String> comboBox;
 	private JDBCService jdbcService;
 	private List<Item> itemsList;
+	private JButton btnSendItems;
+	private JButton btnReceiveItems;
 
 	public AdminSendReceive() {
 		jdbcService = new JDBCService();
@@ -75,7 +77,7 @@ public class AdminSendReceive implements ActionListener {
 		panel_1.add(textField);
 		textField.setColumns(10);
 
-		JButton btnReceiveItems = new JButton("Receive Items");
+		btnReceiveItems = new JButton("Receive Items");
 		btnReceiveItems.setForeground(new Color(255, 255, 255));
 		btnReceiveItems.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -89,7 +91,7 @@ public class AdminSendReceive implements ActionListener {
 		btnReceiveItems.setBounds(300, 358, 162, 31);
 		panel_1.add(btnReceiveItems);
 
-		JButton btnSendItems = new JButton("Send Items");
+		btnSendItems = new JButton("Send Items");
 		btnSendItems.setForeground(new Color(255, 255, 255));
 		btnSendItems.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -156,6 +158,15 @@ public class AdminSendReceive implements ActionListener {
 	}
 
 	private void handleTransaction(String type) {
+		btnSendItems.setEnabled(false);
+		btnReceiveItems.setEnabled(false);
+		
+		if (type.equals("send")) {
+			btnSendItems.setText("Sending...");
+		} else {
+			btnReceiveItems.setText("Receiving...");
+		}
+
 		String selectedItemName = (String) comboBox.getSelectedItem();
 		if (selectedItemName == null || selectedItemName.equals("Select an item...")) {
 			JOptionPane.showMessageDialog(frame, "Please select an item.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -221,7 +232,12 @@ public class AdminSendReceive implements ActionListener {
 					} catch (Exception e) {
 						JOptionPane.showMessageDialog(frame, "An unexpected error occurred: " + e.getMessage(), "Error",
 								JOptionPane.ERROR_MESSAGE);
-					} 
+					} finally {
+						btnSendItems.setText("Send Items");
+						btnReceiveItems.setText("Receive Items");
+						btnSendItems.setEnabled(true);
+						btnReceiveItems.setEnabled(true);
+					}
 				}
 			};
 			

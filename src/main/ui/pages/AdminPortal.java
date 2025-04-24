@@ -146,6 +146,9 @@ public class AdminPortal implements ActionListener {
 
 	private void fetchRequests() {
 		tableModel.setRowCount(0);
+		
+		tableModel.addRow(new Object[] { "Loading...", "", "", "", "", "", "", "", "", "" });
+		
 		SwingWorker<RequestResponse, Void> worker = new SwingWorker<RequestResponse, Void>() {
 			@Override
 			protected RequestResponse doInBackground() throws Exception {
@@ -156,6 +159,8 @@ public class AdminPortal implements ActionListener {
 			protected void done() {
 				try {
 					RequestResponse response = get();
+					tableModel.setRowCount(0);
+					
 					if (response != null && response.success) {
 						displayRequests(response.data);
 					} else {
@@ -164,6 +169,7 @@ public class AdminPortal implements ActionListener {
 					}
 				} catch (Exception e) {
 					System.err.println("Error fetching requests: " + e.getMessage());
+					tableModel.setRowCount(0);
 					tableModel.addRow(
 							new Object[] { "", "", "", "", "", "", "", "Error loading requests. Please try again.", "", "" });
 				}
@@ -252,8 +258,6 @@ public class AdminPortal implements ActionListener {
 										acceptLoadingLabel.setText("");
 										acceptPanel.revalidate();
 										acceptPanel.repaint();
-//										acceptRadio.setEnabled(true);
-//										denyRadio.setEnabled(true);
 									}
 								}
 							};

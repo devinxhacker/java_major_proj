@@ -302,7 +302,6 @@ public class EmployeeRequests implements ActionListener {
                         quantityPanel.add(Box.createVerticalStrut(8));
                         quantityPanel.add(quantityField);
                         
-                        // Buttons Panel
                         JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 0));
                         buttonsPanel.setBackground(new Color(245, 247, 250));
                         
